@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:discounttour/views/home.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/account.dart';
 import '../../components/components.dart';
 import '../../constants/constants.dart';
-import '../details.dart';
 
 class AuthScreen extends StatefulWidget {
   static const routeName = '/auth-screen';
@@ -33,17 +31,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
     print(body);
 
-    if (body['status'] == 401) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Username sau parolă greșită')));
+    if (body['status'] == 401 || body['status'] == 400) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Username sau parolă greșită')));
     }
-
 
     if (body['id_token'] != null) {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       localStorage.setString('token', body['id_token']);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (_) => false);
     }
   }
 
@@ -56,9 +53,8 @@ class _AuthScreenState extends State<AuthScreen> {
       Stack(
         children: [
           Container(
-            height: 30,
-            color: Colors.white,
-            padding: EdgeInsets.only(top: 50),
+            height: 100,
+            padding: EdgeInsets.only(top: 60),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
