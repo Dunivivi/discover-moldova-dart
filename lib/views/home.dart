@@ -191,6 +191,7 @@ class _HomeState extends State<Home> {
                 setState(() {
                   currentRoute = "profile";
                 });
+                // Navigator.of(context).pushNamed(SignIn.routeName);
               },
             ),
           ],

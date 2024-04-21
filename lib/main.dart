@@ -1,4 +1,6 @@
-import 'package:discounttour/views/home.dart';
+import 'package:discounttour/views/auth/auth.dart';
+import 'package:discounttour/views/auth/register.dart';
+import 'package:discounttour/views/auth/welcome.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +18,12 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(),
+      home: WelcomeScreen(),
+      routes: {
+        WelcomeScreen.routeName: (context) => WelcomeScreen(),
+        AuthScreen.routeName: (context) => AuthScreen(),
+        RegisterScreen.routeName: (context) => RegisterScreen(),
+      },
     );
   }
 }
