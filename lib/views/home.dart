@@ -332,6 +332,7 @@ class PopularTours extends StatelessWidget {
                       imgUrl: imgUrl,
                       placeName: title,
                       rating: rating,
+                      desc: desc,
                     )));
       },
       child: Container(

@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 class Details extends StatefulWidget {
   final String imgUrl;
   final String placeName;
+  final String desc;
   final double rating;
   Details(
-      {@required this.rating, @required this.imgUrl, @required this.placeName});
+      {@required this.rating, @required this.imgUrl, @required this.placeName, @required this.desc});
 
   @override
   _DetailsState createState() => _DetailsState();
@@ -112,7 +113,7 @@ class _DetailsState extends State<Details> {
                                     width: 8,
                                   ),
                                   Text(
-                                    "Koh Chang Tai, Thailand",
+                                    "Republica Moldova, Orhei",
                                     style: TextStyle(
                                         color: Colors.white70,
                                         fontWeight: FontWeight.w500,
@@ -193,7 +194,7 @@ class _DetailsState extends State<Details> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque arcu quis eros auctor, eu dapibus urna congue. Nunc nisi diam, semper maximus risus dignissim, semper maximus nibh. Sed finibus ipsum eu erat finibus efficitur. ",
+                  widget.desc ?? '',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: 15,
