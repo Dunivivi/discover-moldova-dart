@@ -10,10 +10,7 @@ class AuthInterceptor extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     token = await Account().token();
-
-    String clearToken = token.replaceAll("?token=", "");
-
-    options.headers.addAll({'Authorization': 'Bearer $clearToken'});
+    options.headers.addAll({'Authorization': 'Bearer $token'});
 
     print(options.headers);
     return handler.next(options);

@@ -8,7 +8,7 @@ class Account {
   token() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var token = localStorage.getString('token');
-    return '?token=$token';
+    return '$token';
   }
 
   login(data) async {
@@ -25,7 +25,12 @@ class Account {
     return response;
   }
 
-  account() async {
+  logout() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.remove('token');
+  }
+
+  fetchAccount() async {
     var dio = Dio();
     var fullUrl = 'http://localhost:8080/api/account';
     // dio.options.baseUrl = fullUrl;
@@ -36,8 +41,6 @@ class Account {
 
     try {
       final response = await dio.get(fullUrl);
-
-      print(response);
       return response;
     } catch (error) {
       print('eeerrrr' + error);

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:discounttour/api/account.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/model/country_model.dart';
 import 'package:discounttour/model/popular_tours_model.dart';
 import 'package:discounttour/views/details.dart';
+import 'package:discounttour/views/profile.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -24,11 +24,6 @@ class _HomeState extends State<Home> {
     country = getCountrys();
     popularTourModels = getPopularTours();
     super.initState();
-  }
-
-  getAccount() async {
-    account = await Account().account();
-    // print(account);
   }
 
   // Track current route
@@ -61,7 +56,7 @@ class _HomeState extends State<Home> {
             Text(
               "Descoperă Moldova",
               style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
             )
           ],
         ),
@@ -164,7 +159,6 @@ class _HomeState extends State<Home> {
               text: 'Explorează',
               isActive: currentRoute == "home",
               onPressed: () {
-                getAccount();
                 // Explore button action
                 setState(() {
                   currentRoute = "home";
@@ -202,7 +196,7 @@ class _HomeState extends State<Home> {
                 setState(() {
                   currentRoute = "profile";
                 });
-                // Navigator.of(context).pushNamed(SignIn.routeName);
+                Navigator.of(context).pushNamed(ProfileScreen.routeName);
               },
             ),
           ],
@@ -267,20 +261,19 @@ class _CategoryListState extends State<CategoryList> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: categories
-            .map((category) =>
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              // Adjust horizontal spacing between categories
-              child: CategoryButton(
-                category: category,
-                isSelected: category == selectedCategory,
-                onPressed: () {
-                  setState(() {
-                    selectedCategory = category;
-                  });
-                },
-              ),
-            ))
+            .map((category) => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  // Adjust horizontal spacing between categories
+                  child: CategoryButton(
+                    category: category,
+                    isSelected: category == selectedCategory,
+                    onPressed: () {
+                      setState(() {
+                        selectedCategory = category;
+                      });
+                    },
+                  ),
+                ))
             .toList(),
       ),
     );
@@ -326,11 +319,12 @@ class PopularTours extends StatelessWidget {
   final String price;
   final double rating;
 
-  PopularTours({@required this.imgUrl,
-    @required this.rating,
-    @required this.desc,
-    @required this.price,
-    @required this.title});
+  PopularTours(
+      {@required this.imgUrl,
+      @required this.rating,
+      @required this.desc,
+      @required this.price,
+      @required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -339,8 +333,7 @@ class PopularTours extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    Details(
+                builder: (context) => Details(
                       imgUrl: imgUrl,
                       placeName: title,
                       rating: rating,
@@ -365,10 +358,11 @@ class PopularTours extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            Expanded( // To make the first container take 80% of the width
+            Expanded(
+              // To make the first container take 80% of the width
               flex: 8, // 8
               child: // 0% of available
-              Container(
+                  Container(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -444,11 +438,12 @@ class CountryListTile extends StatelessWidget {
   final double rating;
   final String imgUrl;
 
-  CountryListTile({@required this.countryName,
-    @required this.label,
-    @required this.noOfTours,
-    @required this.rating,
-    @required this.imgUrl});
+  CountryListTile(
+      {@required this.countryName,
+      @required this.label,
+      @required this.noOfTours,
+      @required this.rating,
+      @required this.imgUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -475,7 +470,7 @@ class CountryListTile extends StatelessWidget {
                     Container(
                         margin: EdgeInsets.only(left: 8, top: 8),
                         padding:
-                        EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                            EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             color: Colors.white38),
