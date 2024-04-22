@@ -1,25 +1,31 @@
+import 'package:dio/dio.dart';
 import 'package:discounttour/api/account.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:http_interceptor/http/interceptor_contract.dart';
-import 'package:http_interceptor/models/request_data.dart';
-import 'package:http_interceptor/models/response_data.dart';
 
-class AuthInterceptor implements InterceptorContract {
+class AuthInterceptor extends Interceptor {
+  AuthInterceptor();
+
   String token;
 
   @override
-  Future<RequestData> interceptRequest({@required RequestData data}) async {
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     token = await Account().token();
 
-    print(77777777);
+    String clearToken = token.replaceAll("?token=", "");
 
-    data.headers.addAll({'Authorization': 'Bearer $token'});
-    print(data);
-    return data;
+    options.headers.addAll({'Authorization': 'Bearer $clearToken'});
+
+    print(options.headers);
+    return handler.next(options);
   }
 
   @override
-  Future<ResponseData> interceptResponse({ResponseData data}) async {
-    return data;
+  void onResponse(Response response, ResponseInterceptorHandler handler) async {
+    return handler.next(response);
+  }
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
+    return handler.next(err);
   }
 }

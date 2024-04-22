@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
 
   getAccount() async {
     account = await Account().account();
-    print(account);
+    // print(account);
   }
 
   // Track current route
