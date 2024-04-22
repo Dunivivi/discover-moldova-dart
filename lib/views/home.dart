@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:discounttour/api/event.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/model/country_model.dart';
 import 'package:discounttour/model/popular_tours_model.dart';
 import 'package:discounttour/views/details.dart';
 import 'package:discounttour/views/profile.dart';
 import 'package:flutter/material.dart';
+
+import '../model/event_model.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
@@ -17,13 +22,51 @@ class _HomeState extends State<Home> {
   List<PopularTourModel> popularTourModels = new List();
   List<CountryModel> country = new List();
 
+  List<EventModel> eventList = new List();
+
+  ScrollController _scrollController = ScrollController();
+
+  var currentPage = 0;
+  var totalCount;
   var account;
+  bool isLoading = false;
 
   @override
   void initState() {
     country = getCountrys();
     popularTourModels = getPopularTours();
     super.initState();
+    _scrollController.addListener(_scrollListener);
+    _loadData();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if ((_scrollController.position.maxScrollExtent -
+                _scrollController.position.pixels) <
+            50 &&
+        totalCount != eventList.length) {
+      currentPage += 1;
+      _loadData();
+    }
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true; // Set loading state to true
+    });
+    await EventService().fetchEvents(currentPage).then((data) => {
+          eventList.addAll(data['events']),
+          totalCount = int.parse(data['totalCount'])
+        });
+    setState(() {
+      isLoading = false; // Set loading state to false
+    });
   }
 
   // Track current route
@@ -34,14 +77,6 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xfffefefe),
-        // leading: Container(
-        //   padding: EdgeInsets.all(7),
-        //   child: Image.asset(
-        //     "assets/menu.png",
-        //     height: 20,
-        //     width: 20,
-        //   ),
-        // ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -60,18 +95,10 @@ class _HomeState extends State<Home> {
             )
           ],
         ),
-        // actions: [
-        //   Container(
-        //     padding: EdgeInsets.symmetric(horizontal: 16),
-        //     child: Icon(
-        //       Icons.more_vert,
-        //       color: Colors.black,
-        //     ),
-        //   )
-        // ],
         elevation: 0.0,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
           child: Column(
@@ -100,19 +127,20 @@ class _HomeState extends State<Home> {
               Container(
                 height: 240,
                 child: ListView.builder(
-                    itemCount: country.length,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return CountryListTile(
-                        label: country[index].label,
-                        countryName: country[index].countryName,
-                        noOfTours: country[index].noOfTours,
-                        rating: country[index].rating,
-                        imgUrl: country[index].imgUrl,
-                      );
-                    }),
+                  itemCount: country.length,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return CountryListTile(
+                      label: country[index].label,
+                      countryName: country[index].countryName,
+                      noOfTours: country[index].noOfTours,
+                      rating: country[index].rating,
+                      imgUrl: country[index].imgUrl,
+                    );
+                  },
+                ),
               ),
               SizedBox(
                 height: 8,
@@ -132,16 +160,20 @@ class _HomeState extends State<Home> {
                   padding: EdgeInsets.only(top: 10),
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
-                  itemCount: popularTourModels.length,
+                  itemCount: eventList.length,
                   itemBuilder: (context, index) {
-                    return PopularTours(
-                      desc: popularTourModels[index].desc,
-                      imgUrl: popularTourModels[index].imgUrl,
-                      title: popularTourModels[index].title,
-                      price: popularTourModels[index].price,
-                      rating: popularTourModels[index].rating,
+                    return EventScrollList(
+                      desc: eventList[index].description,
+                      imgUrl: eventList[index].preViewImg,
+                      title: eventList[index].title,
+                      price: eventList[index].price.toString(),
+                      rating: eventList[index].rating,
                     );
-                  })
+                  }),
+              if (isLoading)
+                Center(
+                  child: LinearProgressIndicator(),
+                ),
             ],
           ),
         ),
@@ -312,14 +344,14 @@ class CategoryButton extends StatelessWidget {
   }
 }
 
-class PopularTours extends StatelessWidget {
+class EventScrollList extends StatelessWidget {
   final String imgUrl;
   final String title;
   final String desc;
   final String price;
   final double rating;
 
-  PopularTours(
+  EventScrollList(
       {@required this.imgUrl,
       @required this.rating,
       @required this.desc,
@@ -351,12 +383,14 @@ class PopularTours extends StatelessWidget {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20)),
-              child: CachedNetworkImage(
-                imageUrl: imgUrl,
-                width: 110,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
+              child: Image.memory(base64Decode(imgUrl),
+                  width: 110, height: 90, fit: BoxFit.cover),
+              // child: CachedNetworkImage(
+              //   imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUZ7hBdZG6uZv5nN7MpXPoGQtPEDODiMx6eA9RitZ3Ew&s",
+              //   width: 110,
+              //   height: 90,
+              //   fit: BoxFit.cover,
+              // ),
             ),
             Expanded(
               // To make the first container take 80% of the width
@@ -389,7 +423,7 @@ class PopularTours extends StatelessWidget {
                       height: 6,
                     ),
                     Text(
-                      price,
+                      "$price MDL",
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

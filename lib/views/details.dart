@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/model/country_model.dart';
@@ -8,8 +10,12 @@ class Details extends StatefulWidget {
   final String placeName;
   final String desc;
   final double rating;
+
   Details(
-      {@required this.rating, @required this.imgUrl, @required this.placeName, @required this.desc});
+      {@required this.rating,
+      @required this.imgUrl,
+      @required this.placeName,
+      @required this.desc});
 
   @override
   _DetailsState createState() => _DetailsState();
@@ -34,12 +40,10 @@ class _DetailsState extends State<Details> {
             children: [
               Stack(
                 children: [
-                  Image.network(
-                    widget.imgUrl,
-                    height: 350,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                  ),
+                  Image.memory(base64Decode(widget.imgUrl),
+                      height: 350,
+                      width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.cover),
                   Container(
                     height: 350,
                     color: Colors.black12,
@@ -232,6 +236,7 @@ class DetailsCard extends StatelessWidget {
   final String title;
   final String noOfReviews;
   final double rating;
+
   DetailsCard({this.rating, this.title, this.noOfReviews});
 
   @override
@@ -304,6 +309,7 @@ class DetailsCard extends StatelessWidget {
 class FeaturesTile extends StatelessWidget {
   final Icon icon;
   final String label;
+
   FeaturesTile({this.label, this.icon});
 
   @override
@@ -342,6 +348,7 @@ class FeaturesTile extends StatelessWidget {
 
 class RatingBar extends StatelessWidget {
   final int rating;
+
   RatingBar(this.rating);
 
   @override
@@ -389,6 +396,7 @@ class RatingBar extends StatelessWidget {
 
 class ImageListTile extends StatelessWidget {
   final String imgUrl;
+
   ImageListTile({@required this.imgUrl});
 
   @override
