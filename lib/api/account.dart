@@ -23,4 +23,16 @@ class Account {
 
     return response;
   }
+
+  account() async {
+    var fullUrl = 'http://localhost:8080/api/account';
+
+    Response response = await http.get(
+      Uri.parse(fullUrl),
+      // headers: <String, String>{
+      //   'Content-Type': 'application/json; charset=UTF-8',
+      // },
+    );
+    return response;
+  }
 }

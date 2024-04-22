@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:discounttour/api/account.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/model/country_model.dart';
 import 'package:discounttour/model/popular_tours_model.dart';
@@ -16,11 +17,18 @@ class _HomeState extends State<Home> {
   List<PopularTourModel> popularTourModels = new List();
   List<CountryModel> country = new List();
 
+  var account;
+
   @override
   void initState() {
     country = getCountrys();
     popularTourModels = getPopularTours();
     super.initState();
+  }
+
+  getAccount() async {
+    account = await Account().account();
+    print(account);
   }
 
   // Track current route
@@ -156,6 +164,7 @@ class _HomeState extends State<Home> {
               text: 'Explorează',
               isActive: currentRoute == "home",
               onPressed: () {
+                getAccount();
                 // Explore button action
                 setState(() {
                   currentRoute = "home";
