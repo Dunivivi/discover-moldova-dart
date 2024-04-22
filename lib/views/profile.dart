@@ -40,11 +40,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left)),
-      //   title: Text(tProfile, style: Theme.of(context).textTheme.headline4),
-      //   actions: [IconButton(onPressed: () {}, icon: Icon(isDark ? LineAwesomeIcons.sun : LineAwesomeIcons.moon))],
-      // ),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffafafa),
+        leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back, color: Colors.black, size: 24)),
+        elevation: 0.0,
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.only(top: 100),
@@ -80,9 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              Text('${user.firstName} ${user.lastName}',
+              Text('${user?.firstName ?? ''} ${user?.lastName ?? ''}',
                   style: Theme.of(context).textTheme.headline4),
-              Text('${user.email}',
+              Text('${user?.email ?? ''}',
                   style: Theme.of(context).textTheme.bodyText2),
               const SizedBox(height: 20),
 
