@@ -34,4 +34,11 @@ class MapUtils {
     //   throw 'Could not open the map.';
     // }
   }
+
+  static Future<void> openUrl(String url) async {
+    final Uri finalUrl = Uri.parse(url);
+    if (!await launch(finalUrl.toString())) {
+      throw Exception('Could not launch ${finalUrl.toString()}');
+    }
+  }
 }

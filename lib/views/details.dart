@@ -13,11 +13,13 @@ class Details extends StatefulWidget {
   final String placeName;
   final String desc;
   final double rating;
+  final int noOfTours;
 
   Details(
       {@required this.rating,
       @required this.imgUrl,
       @required this.placeName,
+      @required this.noOfTours,
       @required this.desc});
 
   @override
@@ -212,44 +214,34 @@ class _DetailsState extends State<Details> {
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(30),
                                   topRight: Radius.circular(30))),
-                          height: 50,
+                          height: 20,
                         )
                       ],
                     ),
                   )
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FeaturesTile(
-                    icon: Icon(Icons.wifi, color: Color(0xff5A6C64)),
-                    label: "Free Wi-Fi",
-                  ),
-                  FeaturesTile(
-                    icon: Icon(Icons.beach_access, color: Color(0xff5A6C64)),
-                    label: "Sand Beach",
-                  ),
-                  FeaturesTile(
-                    icon: Icon(Icons.card_travel, color: Color(0xff5A6C64)),
-                    label: "First Coastline",
-                  ),
-                  FeaturesTile(
-                    icon: Icon(Icons.local_drink, color: Color(0xff5A6C64)),
-                    label: "bar and Resturant",
-                  )
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [DetailsCard(), DetailsCard()],
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     FeaturesTile(
+              //       icon: Icon(Icons.wifi, color: Color(0xff5A6C64)),
+              //       label: "Free Wi-Fi",
+              //     ),
+              //     FeaturesTile(
+              //       icon: Icon(Icons.beach_access, color: Color(0xff5A6C64)),
+              //       label: "Sand Beach",
+              //     ),
+              //     FeaturesTile(
+              //       icon: Icon(Icons.card_travel, color: Color(0xff5A6C64)),
+              //       label: "First Coastline",
+              //     ),
+              //     FeaturesTile(
+              //       icon: Icon(Icons.local_drink, color: Color(0xff5A6C64)),
+              //       label: "bar and Resturant",
+              //     )
+              //   ],
+              // ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
@@ -264,6 +256,19 @@ class _DetailsState extends State<Details> {
               ),
               SizedBox(
                 height: 16,
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DetailsCard(
+                        rating: widget.rating, noOfReviews: widget.noOfTours)
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 15,
               ),
               Container(
                 height: 240,
@@ -296,7 +301,7 @@ class _DetailsState extends State<Details> {
               onPressed: () {
                 // Add your onTap function logic here
                 print('Button tapped');
-                MapUtils.openMap(-3.823216,-38.481700);
+                MapUtils.openMap(-3.823216, -38.481700);
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue, // Background color
@@ -343,75 +348,78 @@ class _DetailsState extends State<Details> {
 
 class DetailsCard extends StatelessWidget {
   final String title;
-  final String noOfReviews;
+  final int noOfReviews;
   final double rating;
 
   DetailsCard({this.rating, this.title, this.noOfReviews});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-          color: Color(0xffE9F4F9), borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return GestureDetector(
+        onTap: (() => MapUtils.openUrl("https://translate.google.com/")),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+              color: Color(0xffE9F4F9),
+              borderRadius: BorderRadius.circular(16)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Color(0xffD5E6F2),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Image.asset(
-                  "assets/card1.png",
-                  height: 30,
-                ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Text(
-                    "Booking",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff5A6C64)),
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: Color(0xffD5E6F2),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Image.asset(
+                      "assets/card1.png",
+                      height: 30,
+                    ),
                   ),
                   SizedBox(
-                    height: 6,
+                    width: 8,
                   ),
-                  Text(
-                    "8.0/10",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff5A6C64)),
-                  )
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Booking",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff5A6C64)),
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Text(
+                        "$rating/5",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff5A6C64)),
+                      )
+                    ],
+                  ),
                 ],
-              )
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                "În baza a $noOfReviews recenzii",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff879D95)),
+              ),
             ],
           ),
-          SizedBox(
-            height: 8,
-          ),
-          Text(
-            " Based on 30 reviews",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xff879D95)),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
 

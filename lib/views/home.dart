@@ -208,6 +208,7 @@ class _HomeState extends State<Home> {
                       title: eventList[index].title,
                       price: eventList[index].price.toString(),
                       rating: eventList[index].rating,
+                      noOfTours: eventList[index].noOfTours,
                     );
                   }),
               if (isLoading)
@@ -394,10 +395,12 @@ class EventScrollList extends StatelessWidget {
   final String desc;
   final String price;
   final double rating;
+  final int noOfTours;
 
   EventScrollList(
       {@required this.imgUrl,
       @required this.rating,
+      @required this.noOfTours,
       @required this.desc,
       @required this.price,
       @required this.title});
@@ -414,6 +417,7 @@ class EventScrollList extends StatelessWidget {
                       placeName: title,
                       rating: rating,
                       desc: desc,
+                      noOfTours: noOfTours,
                     )));
       },
       child: Container(
@@ -537,6 +541,7 @@ class RecommendedList extends StatelessWidget {
                         placeName: name,
                         rating: rating,
                         desc: desc,
+                        noOfTours: noOfTours,
                       )));
         },
         child: Container(
