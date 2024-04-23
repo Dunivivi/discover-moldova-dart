@@ -73,25 +73,71 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                               Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  Share.share("${widget.desc}",
-                                      subject: "${widget.placeName}");
-                                },
-                                child: Icon(
-                                  Icons.share,
-                                  color: Colors.white,
-                                  size: 24,
+                              Container(
+                                padding: EdgeInsets.all(8.0),
+                                // Adjust padding as needed
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.6),
+                                  border: Border.all(color: Colors.grey),
+                                  // Border color
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Border radius
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        // Background color
+                                        borderRadius: BorderRadius.circular(
+                                            8.0), // Border radius
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Share.share("${widget.desc}",
+                                            subject: "${widget.placeName}");
+                                      },
+                                      child: Icon(
+                                        Icons.share,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               SizedBox(
-                                width: 24,
+                                width: 18,
                               ),
-                              Image.asset(
-                                "assets/heart.png",
-                                height: 24,
-                                width: 24,
-                              )
+                              Container(
+                                padding: EdgeInsets.all(8.0),
+                                // Adjust padding as needed
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.6),
+                                  border: Border.all(color: Colors.grey),
+                                  // Border color
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Border radius
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        // Background color
+                                        borderRadius: BorderRadius.circular(
+                                            8.0), // Border radius
+                                      ),
+                                    ),
+                                    Image.asset(
+                                      "assets/heart.png",
+                                      height: 24,
+                                      width: 24,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -236,6 +282,59 @@ class _DetailsState extends State<Details> {
           ),
         ),
       ),
+      bottomNavigationBar: Container(
+        color: Color(0xfffefefe),
+        // Background color
+        padding:
+            EdgeInsets.only(left: 16.0, right: 16.0, bottom: 30.0, top: 10),
+        // Padding for the container, excluding top
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                // Add your onTap function logic here
+                print('Button tapped');
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue, // Background color
+                onPrimary: Colors.white, // Text color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Border radius
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 30, right: 30, top: 12, bottom: 12),
+                child: Text('Vizitează acum',
+                    style: TextStyle(fontSize: 16)), // Button text
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNavItem({IconData icon, String text, VoidCallback onPressed}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: Icon(
+            icon,
+            color: Colors.black, // Change color based on isActive
+          ),
+          onPressed: onPressed,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 12.0,
+            color: Colors.black, // Change color based on isActive
+          ),
+        ),
+      ],
     );
   }
 }
