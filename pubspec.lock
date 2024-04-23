@@ -208,6 +208,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  mime:
+    dependency: transitive
+    description:
+      name: mime
+      sha256: e4ff8e8564c03f255408decd16e7899da1733852a9110a58fe6d1b817684a63e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   octo_image:
     dependency: transitive
     description:
@@ -292,10 +300,10 @@ packages:
     dependency: transitive
     description:
       name: plugin_platform_interface
-      sha256: c3ebbff365bfb1b5f7b690c9857d2dabea167f35b05eb7586186499b407efb37
+      sha256: b659c628f1d29369371b0e4e334beb3606474f4f3bcf887975926d7f7643b563
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.1.0-nullsafety.2"
   pointycastle:
     dependency: transitive
     description:
@@ -320,6 +328,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.25.0"
+  share_plus:
+    dependency: "direct main"
+    description:
+      name: share_plus
+      sha256: "062f4994880cdc521f079e1be99254445c3ffa3a66c65b601d40c93f6cd384ae"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0-nullsafety.0"
+  share_plus_linux:
+    dependency: transitive
+    description:
+      name: share_plus_linux
+      sha256: bf93a2b20a084a1c60843bc4dc48b65e93b61313d6537e8073f86df068e0cc4f
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0-nullsafety.0"
+  share_plus_macos:
+    dependency: transitive
+    description:
+      name: share_plus_macos
+      sha256: "3abe1d1e347349875ba7d59198408c3d4cc3fd6d4364ce320e48371115e30c94"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0-nullsafety.0"
+  share_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: share_plus_platform_interface
+      sha256: "94d4dc357222641c00933d52088d438ffee95cbeabffccf3c5445c86af5c59d4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0-nullsafety.0"
+  share_plus_web:
+    dependency: transitive
+    description:
+      name: share_plus_web
+      sha256: "04f30cba5cf9dfb2bf63032b7a8cb1111b89d82ecc759ddfb74101116048244b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0-nullsafety.0"
+  share_plus_windows:
+    dependency: transitive
+    description:
+      name: share_plus_windows
+      sha256: cb705fbe04b76e2d2272a150124d1da5c106e1f86d6f58404cf4ff97c3279740
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0-nullsafety.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -453,6 +509,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  url_launcher:
+    dependency: transitive
+    description:
+      name: url_launcher
+      sha256: bd0c1c94d7090f1c86db4e693399385f82fde14bcf472dc7de846f4f7948652d
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.5"
+  url_launcher_linux:
+    dependency: transitive
+    description:
+      name: url_launcher_linux
+      sha256: ae3c5ce30a1ba0a69c3f8803b23450703cf915575ad591857df98d9c15c11018
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      sha256: "8fd9ae3ab5e0f96cea7dd66c4ea65e39e3477067f4997c1ec8225d553e8bb8ea"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      sha256: be46294de4b963e3dc442dd207f82225bea5a802b9676b20d2ceca3f9dd3508f
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      sha256: "15fd9dbb306d5efce57dcf62dcb1ae045fbf74079ab4464a950e099bf5800deb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.12"
+  url_launcher_windows:
+    dependency: transitive
+    description:
+      name: url_launcher_windows
+      sha256: "4e24aac2a2960fb9a70a07992e1ba69cb99fbcee48fdf17abe280ce867bfcea2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   uuid:
     dependency: transitive
     description:

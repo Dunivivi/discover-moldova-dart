@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:discounttour/data/data.dart';
 import 'package:discounttour/model/country_model.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../data/data.dart';
 
 class Details extends StatefulWidget {
   final String imgUrl;
@@ -71,10 +73,16 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                               Spacer(),
-                              Icon(
-                                Icons.share,
-                                color: Colors.white,
-                                size: 24,
+                              GestureDetector(
+                                onTap: () {
+                                  Share.share("${widget.desc}",
+                                      subject: "${widget.placeName}");
+                                },
+                                child: Icon(
+                                  Icons.share,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                               ),
                               SizedBox(
                                 width: 24,
