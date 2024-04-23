@@ -466,13 +466,13 @@ class EventScrollList extends StatelessWidget {
                     SizedBox(
                       height: 6,
                     ),
-                    Text(
-                      "$price MDL",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff4E6059)),
-                    )
+                    // Text(
+                    //   "$price MDL",
+                    //   style: TextStyle(
+                    //       fontSize: 16,
+                    //       fontWeight: FontWeight.w600,
+                    //       color: Color(0xff4E6059)),
+                    // )
                   ],
                 ),
               ),
