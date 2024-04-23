@@ -1,6 +1,34 @@
 import 'package:discounttour/model/country_model.dart';
 import 'package:discounttour/model/popular_tours_model.dart';
 
+List<String> getCategories() {
+  List<String> categories = [
+    "Toate",
+    "Aventură",
+    "Meșteșug",
+    "Gastronomie",
+    "Vinării",
+    "Copii",
+    "Insta",
+    "Etno",
+    "Istorie",
+    "Religie",
+    "Artă",
+    "Natură",
+    "Terapie",
+    "Popas",
+    "Cazare",
+    "Suvenire",
+    "Agenţii",
+    "Info",
+    "Campinguri",
+    "Benzinării"
+  ];
+
+  return categories;
+}
+
+
 List<CountryModel> getCountrys() {
   List<CountryModel> country = new List();
   CountryModel countryModel = new CountryModel();

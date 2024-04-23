@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:discounttour/api/event.dart';
 import 'package:discounttour/data/data.dart';
-import 'package:discounttour/model/country_model.dart';
-import 'package:discounttour/model/popular_tours_model.dart';
 import 'package:discounttour/views/details.dart';
 import 'package:discounttour/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +16,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<PopularTourModel> popularTourModels = new List();
-  List<CountryModel> country = new List();
+  // Define GlobalKey
+  GlobalKey<_HomeState> parentKey = GlobalKey<_HomeState>();
 
   List<EventModel> eventList = new List();
   List<EventModel> recommendedEventList = new List();
@@ -28,18 +26,19 @@ class _HomeState extends State<Home> {
 
   var currentPage = 0;
   var totalCount;
+  String selectedCategory;
   var account;
+
   bool isLoading = false;
   bool isFetchingSuggestions = false;
 
   @override
   void initState() {
-    country = getCountrys();
-    popularTourModels = getPopularTours();
     super.initState();
     _scrollController.addListener(_scrollListener);
     _loadRecommended();
-    _loadData();
+    selectedCategory = "Toate";
+    _loadDataByCategory(selectedCategory);
   }
 
   @override
@@ -54,18 +53,43 @@ class _HomeState extends State<Home> {
             50 &&
         totalCount != eventList.length) {
       currentPage += 1;
-      _loadData();
+      _paginateDataByCategory(selectedCategory);
     }
   }
 
-  Future<void> _loadData() async {
+  void handleCategoryTap(String category) {
+    print("Handle category $category");
+    _loadDataByCategory(category);
+  }
+
+  _loadDataByCategory(category) async {
+    selectedCategory = category;
+    currentPage = 0;
+    eventList = [];
+    totalCount = 0;
+
     setState(() {
       isLoading = true; // Set loading state to true
     });
-    await EventService().fetchEvents(currentPage).then((data) => {
-          eventList.addAll(data['events']),
-          totalCount = int.parse(data['totalCount'])
-        });
+    await EventService().fetchEventsByCategory(currentPage, category).then(
+        (data) => {
+              eventList.addAll(data['events']),
+              totalCount = int.parse(data['totalCount'])
+            });
+    setState(() {
+      isLoading = false; // Set loading state to false
+    });
+  }
+
+  _paginateDataByCategory(category) async {
+    setState(() {
+      isLoading = true; // Set loading state to true
+    });
+    await EventService().fetchEventsByCategory(currentPage, category).then(
+        (data) => {
+              eventList.addAll(data['events']),
+              totalCount = int.parse(data['totalCount'])
+            });
     setState(() {
       isLoading = false; // Set loading state to false
     });
@@ -168,7 +192,10 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: 16,
               ),
-              CategoryList(),
+              CategoryList(
+                parentKey: parentKey,
+                handleTap: handleCategoryTap,
+              ),
               ListView.builder(
                   padding: EdgeInsets.only(top: 10),
                   shrinkWrap: true,
@@ -279,6 +306,15 @@ class _HomeState extends State<Home> {
 }
 
 class CategoryList extends StatefulWidget {
+  // Receive GlobalKey from parent widget
+  final GlobalKey<_HomeState> parentKey;
+
+  // Receive handleTap function from parent widget
+  final Function(String) handleTap;
+
+  // Constructor
+  CategoryList({this.parentKey, @required this.handleTap});
+
   @override
   _CategoryListState createState() => _CategoryListState();
 }
@@ -286,13 +322,7 @@ class CategoryList extends StatefulWidget {
 class _CategoryListState extends State<CategoryList> {
   String selectedCategory;
 
-  final List<String> categories = [
-    "Toate",
-    "Relaxare",
-    "Plimbare",
-    "Istorie",
-    "Cazare"
-  ];
+  final List<String> categories = getCategories();
 
   @override
   void initState() {
@@ -316,6 +346,7 @@ class _CategoryListState extends State<CategoryList> {
                       setState(() {
                         selectedCategory = category;
                       });
+                      widget.handleTap(category);
                     },
                   ),
                 ))
@@ -498,115 +529,116 @@ class RecommendedList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Details(
-                imgUrl: imgUrl,
-                placeName: name,
-                rating: rating,
-                desc: desc,
-              )));
-    },
-      child: Container(
-      margin: EdgeInsets.only(right: 8),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.memory(
-              base64Decode(imgUrl),
-              height: 220,
-              width: 150,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Container(
-            height: 200,
-            width: 150,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(left: 8, top: 8),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white38),
-                        child: Text(
-                          label ?? "New",
-                          style: TextStyle(color: Colors.white),
-                        ))
-                  ],
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Details(
+                        imgUrl: imgUrl,
+                        placeName: name,
+                        rating: rating,
+                        desc: desc,
+                      )));
+        },
+        child: Container(
+          margin: EdgeInsets.only(right: 8),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.memory(
+                  base64Decode(imgUrl),
+                  height: 220,
+                  width: 150,
+                  fit: BoxFit.cover,
                 ),
-                Spacer(),
-                Row(
+              ),
+              Container(
+                height: 200,
+                width: 150,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            bottom: 0, left: 8, right: 8, top: 40),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Text(
-                                name,
+                    Row(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(left: 8, top: 8),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 8),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.white38),
+                            child: Text(
+                              label ?? "New",
+                              style: TextStyle(color: Colors.white),
+                            ))
+                      ],
+                    ),
+                    Spacer(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                bottom: 0, left: 8, right: 8, top: 40),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    name,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 3),
+                                Text(
+                                  noOfTours.toString() + " vizite recente",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 0, right: 5, top: 30),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 3, vertical: 7),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: Colors.white38,
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                rating.toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 16,
+                                  fontSize: 13,
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              noOfTours.toString() + " vizite recente",
-                              style: TextStyle(
+                              SizedBox(height: 2),
+                              Icon(
+                                Icons.star,
                                 color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 0, right: 5, top: 30),
-                      padding: EdgeInsets.symmetric(horizontal: 3, vertical: 7),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        color: Colors.white38,
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            rating.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
+                                size: 20,
+                              )
+                            ],
                           ),
-                          SizedBox(height: 2),
-                          Icon(
-                            Icons.star,
-                            color: Colors.white,
-                            size: 20,
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
