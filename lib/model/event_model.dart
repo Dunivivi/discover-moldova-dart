@@ -49,7 +49,7 @@ class EventModel {
           : null,
       createdBy: json['createdBy'],
       createdDate: json['createdDate'] != null
-          ? DateTime.parse(json['created_Date'])
+          ? DateTime.parse(json['createdDate'])
           : null,
       lastModifiedBy: json['lastModifiedBy'],
       lastModifiedDate: json['lastModifiedDate'] != null
