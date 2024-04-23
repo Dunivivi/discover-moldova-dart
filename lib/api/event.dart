@@ -16,11 +16,37 @@ class EventService {
       Response response = await dio.get(fullUrl);
 
       if (response.statusCode == 200) {
-        List<dynamic> responseData = response.data; // Assuming response.data is a List<dynamic>
-        List<EventModel> events = responseData.map((data) => EventModel.fromJson(data)).toList();
+        List<dynamic> responseData =
+            response.data; // Assuming response.data is a List<dynamic>
+        List<EventModel> events =
+            responseData.map((data) => EventModel.fromJson(data)).toList();
         String totalCount = response.headers.value('x-total-count');
 
         return {'events': events, 'totalCount': totalCount};
+      }
+    } catch (error) {
+      print('eeerrrr' + error);
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchRecommendedEvents() async {
+    var dio = Dio();
+    var fullUrl = 'http://localhost:8080/api/events/suggested';
+
+    dio.interceptors
+      ..add(LogInterceptor())
+      ..add(AuthInterceptor());
+
+    try {
+      Response response = await dio.get(fullUrl);
+
+      if (response.statusCode == 200) {
+        List<dynamic> responseData =
+            response.data; // Assuming response.data is a List<dynamic>
+        List<EventModel> events =
+            responseData.map((data) => EventModel.fromJson(data)).toList();
+
+        return {'events': events};
       }
     } catch (error) {
       print('eeerrrr' + error);

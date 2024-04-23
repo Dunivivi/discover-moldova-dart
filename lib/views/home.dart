@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discounttour/api/event.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/model/country_model.dart';
@@ -23,6 +22,7 @@ class _HomeState extends State<Home> {
   List<CountryModel> country = new List();
 
   List<EventModel> eventList = new List();
+  List<EventModel> recommendedEventList = new List();
 
   ScrollController _scrollController = ScrollController();
 
@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
   var totalCount;
   var account;
   bool isLoading = false;
+  bool isFetchingSuggestions = false;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _HomeState extends State<Home> {
     popularTourModels = getPopularTours();
     super.initState();
     _scrollController.addListener(_scrollListener);
+    _loadRecommended();
     _loadData();
   }
 
@@ -66,6 +68,18 @@ class _HomeState extends State<Home> {
         });
     setState(() {
       isLoading = false; // Set loading state to false
+    });
+  }
+
+  Future<void> _loadRecommended() async {
+    setState(() {
+      isFetchingSuggestions = true; // Set loading state to true
+    });
+    await EventService().fetchRecommendedEvents().then((data) => {
+          recommendedEventList.addAll(data['events']),
+        });
+    setState(() {
+      isFetchingSuggestions = false; // Set loading state to false
     });
   }
 
@@ -114,31 +128,30 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: 8,
               ),
-              // Text(
-              //   "Country",
-              //   style: TextStyle(
-              //       fontSize: 20,
-              //       color: Colors.black54,
-              //       fontWeight: FontWeight.w600),
-              // ),
-              // SizedBox(
-              //   height: 16,
               // ),
               Container(
                 height: 240,
                 child: ListView.builder(
-                  itemCount: country.length,
+                  itemCount: recommendedEventList.length,
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return CountryListTile(
-                      label: country[index].label,
-                      countryName: country[index].countryName,
-                      noOfTours: country[index].noOfTours,
-                      rating: country[index].rating,
-                      imgUrl: country[index].imgUrl,
-                    );
+                    if (isFetchingSuggestions) {
+                      return Center(
+                        child:
+                            CircularProgressIndicator(), // Show loading indicator
+                      );
+                    } else {
+                      return RecommendedList(
+                        label: "New",
+                        name: recommendedEventList[index].title,
+                        noOfTours: recommendedEventList[index].noOfTours,
+                        rating: recommendedEventList[index].rating,
+                        imgUrl: recommendedEventList[index].preViewImg,
+                        desc: recommendedEventList[index].description,
+                      );
+                    }
                   },
                 ),
               ),
@@ -465,30 +478,44 @@ class EventScrollList extends StatelessWidget {
   }
 }
 
-class CountryListTile extends StatelessWidget {
+class RecommendedList extends StatelessWidget {
   final String label;
-  final String countryName;
+  final String name;
   final int noOfTours;
   final double rating;
   final String imgUrl;
+  final String desc;
 
-  CountryListTile(
-      {@required this.countryName,
+  RecommendedList(
+      {@required this.name,
       @required this.label,
       @required this.noOfTours,
       @required this.rating,
+      @required this.desc,
       @required this.imgUrl});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+        onTap: () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Details(
+                imgUrl: imgUrl,
+                placeName: name,
+                rating: rating,
+                desc: desc,
+              )));
+    },
+      child: Container(
       margin: EdgeInsets.only(right: 8),
       child: Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: CachedNetworkImage(
-              imageUrl: imgUrl,
+            child: Image.memory(
+              base64Decode(imgUrl),
               height: 220,
               width: 150,
               fit: BoxFit.cover,
@@ -526,7 +553,7 @@ class CountryListTile extends StatelessWidget {
                           children: [
                             Container(
                               child: Text(
-                                countryName,
+                                name,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -580,6 +607,6 @@ class CountryListTile extends StatelessWidget {
           )
         ],
       ),
-    );
+    ));
   }
 }
