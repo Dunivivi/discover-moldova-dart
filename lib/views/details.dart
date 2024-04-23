@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../data/data.dart';
+import '../utils/map_utils.dart';
 
 class Details extends StatefulWidget {
   final String imgUrl;
@@ -295,6 +296,7 @@ class _DetailsState extends State<Details> {
               onPressed: () {
                 // Add your onTap function logic here
                 print('Button tapped');
+                MapUtils.openMap(-3.823216,-38.481700);
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue, // Background color
