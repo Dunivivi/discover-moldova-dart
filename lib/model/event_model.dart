@@ -37,23 +37,23 @@ class EventModel {
     return EventModel(
       id: json['id'],
       title: json['title'],
-      noOfTours: json['no_of_tours'],
+      noOfTours: json['noOfTours'],
       rating: json['rating'],
       preViewImg: json['preViewImg'],
       description: json['description'],
       type: json['type'],
       subtype: json['subtype'],
       price: json['price'],
-      eventDate: json['event_date'] != null
-          ? DateTime.parse(json['event_date'])
+      eventDate: json['eventDate'] != null
+          ? DateTime.parse(json['eventDate'])
           : null,
-      createdBy: json['created_by'],
-      createdDate: json['created_date'] != null
-          ? DateTime.parse(json['created_date'])
+      createdBy: json['createdBy'],
+      createdDate: json['createdDate'] != null
+          ? DateTime.parse(json['created_Date'])
           : null,
-      lastModifiedBy: json['last_modified_by'],
-      lastModifiedDate: json['last_modified_date'] != null
-          ? DateTime.parse(json['last_modified_date'])
+      lastModifiedBy: json['lastModifiedBy'],
+      lastModifiedDate: json['lastModifiedDate'] != null
+          ? DateTime.parse(json['lastModifiedDate'])
           : null,
       companyId: json['company_id'],
     );
