@@ -118,22 +118,37 @@ class _FavoritesState extends State<FavoritesScreen> {
                     parentKey: parentKey,
                     handleTap: handleCategoryTap,
                   ),
-                  ListView.builder(
-                      padding: EdgeInsets.only(top: 10),
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: favoritesList.length,
-                      itemBuilder: (context, index) {
-                        return EventScrollList(
-                          parentKey: parentKey,
-                          handleDetailPage: handleDetailPage,
-                          event: favoritesList[index],
-                        );
-                      }),
+                  favoritesList.isEmpty && !isLoading
+                      ? Center(
+                          child: Padding(
+                          padding: const EdgeInsets.only(top: 100.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.search, size: 50),
+                              SizedBox(height: 10),
+                              Text('Nu sunt date'),
+                            ],
+                          ),
+                        ))
+                      : ListView.builder(
+                          padding: EdgeInsets.only(top: 10),
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: favoritesList.length,
+                          itemBuilder: (context, index) {
+                            return EventScrollList(
+                              parentKey: parentKey,
+                              handleDetailPage: handleDetailPage,
+                              event: favoritesList[index],
+                            );
+                          }),
                   if (isLoading)
                     Center(
+                        child: Padding(
+                      padding: const EdgeInsets.only(top: 100.0),
                       child: CircularProgressIndicator(),
-                    ),
+                    )),
                 ],
               ))),
       bottomNavigationBar: Container(

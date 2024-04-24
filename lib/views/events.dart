@@ -89,12 +89,39 @@ class _EventsState extends State<EventsScreen> {
         ),
         elevation: 0.0,
       ),
-      body: ListView.builder(
-        itemCount: eventsList.length,
-        itemBuilder: (context, index) {
-          return EventCard(event: eventsList[index]);
-        },
-      ),
+      body: SingleChildScrollView(
+          controller: _scrollController,
+          child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Column(children: [
+                eventsList.isEmpty && !isLoading
+                    ? Center(
+                        child: Padding(
+                        padding: const EdgeInsets.only(top: 100.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.search, size: 50),
+                            SizedBox(height: 10),
+                            Text('Nu sunt date'),
+                          ],
+                        ),
+                      ))
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: eventsList.length,
+                        itemBuilder: (context, index) {
+                          return EventCard(event: eventsList[index]);
+                        },
+                      ),
+                if (isLoading)
+                  Center(
+                      child: Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: CircularProgressIndicator(),
+                  )),
+              ]))),
       bottomNavigationBar: Container(
         color: Color(0xfffefefe),
         // Background color

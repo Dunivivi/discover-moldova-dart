@@ -201,22 +201,37 @@ class _HomeState extends State<Home> {
                 parentKey: parentKey,
                 handleTap: handleCategoryTap,
               ),
-              ListView.builder(
-                  padding: EdgeInsets.only(top: 10),
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemCount: eventList.length,
-                  itemBuilder: (context, index) {
-                    return EventScrollList(
-                      parentKey: parentKey,
-                      handleDetailPage: handleDetailPage,
-                      event: eventList[index],
-                    );
-                  }),
+              eventList.isEmpty && !isLoading
+                  ? Center(
+                      child: Padding(
+                      padding: const EdgeInsets.only(top: 100.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search, size: 50),
+                          SizedBox(height: 10),
+                          Text('Nu sunt date'),
+                        ],
+                      ),
+                    ))
+                  : ListView.builder(
+                      padding: EdgeInsets.only(top: 10),
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: eventList.length,
+                      itemBuilder: (context, index) {
+                        return EventScrollList(
+                          parentKey: parentKey,
+                          handleDetailPage: handleDetailPage,
+                          event: eventList[index],
+                        );
+                      }),
               if (isLoading)
                 Center(
-                  child: LinearProgressIndicator(),
-                ),
+                    child: Padding(
+                  padding: const EdgeInsets.only(top: 100.0),
+                  child: CircularProgressIndicator(),
+                )),
             ],
           ),
         ),
@@ -244,7 +259,9 @@ class _HomeState extends State<Home> {
               },
             ),
             buildNavItem(
-                icon: Icons.event, text: 'Evenimente', isActive: false,
+              icon: Icons.event,
+              text: 'Evenimente',
+              isActive: false,
               onPressed: () {
                 Navigator.of(context)
                     .pushReplacementNamed(EventsScreen.routeName);
@@ -551,17 +568,17 @@ class RecommendedList extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Container(
-                            margin: EdgeInsets.only(left: 8, top: 8),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 8),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.white38),
-                            child: Text(
-                              "New",
-                              style: TextStyle(color: Colors.white),
-                            ))
+                        // Container(
+                        //     margin: EdgeInsets.only(left: 8, top: 8),
+                        //     padding: EdgeInsets.symmetric(
+                        //         vertical: 6, horizontal: 8),
+                        //     decoration: BoxDecoration(
+                        //         borderRadius: BorderRadius.circular(8),
+                        //         color: Colors.white38),
+                        //     child: Text(
+                        //       "New",
+                        //       style: TextStyle(color: Colors.white),
+                        //     ))
                       ],
                     ),
                     Spacer(),
