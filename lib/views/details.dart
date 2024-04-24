@@ -2,25 +2,18 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discounttour/model/country_model.dart';
+import 'package:discounttour/model/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../api/event.dart';
 import '../data/data.dart';
 import '../utils/map_utils.dart';
 
 class Details extends StatefulWidget {
-  final String imgUrl;
-  final String placeName;
-  final String desc;
-  final double rating;
-  final int noOfTours;
+  final EventModel event;
 
-  Details(
-      {@required this.rating,
-      @required this.imgUrl,
-      @required this.placeName,
-      @required this.noOfTours,
-      @required this.desc});
+  Details({@required this.event});
 
   @override
   _DetailsState createState() => _DetailsState();
@@ -29,10 +22,32 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   List<CountryModel> country = new List();
 
+  bool isFavorite = false;
+
   @override
   void initState() {
     country = getCountrys();
+    isFavorite = widget.event.favorite;
     super.initState();
+  }
+
+  manageFavoriteState(id) {
+    if (isFavorite) {
+      removeFromFavorites(id);
+    } else {
+      addToFavorites(id);
+    }
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  addToFavorites(id) async {
+    await EventService().addToFavorite(id).then((value) => null);
+  }
+
+  removeFromFavorites(id) async {
+    await EventService().deleteFromFavorite(id).then((value) => null);
   }
 
   @override
@@ -45,7 +60,7 @@ class _DetailsState extends State<Details> {
             children: [
               Stack(
                 children: [
-                  Image.memory(base64Decode(widget.imgUrl),
+                  Image.memory(base64Decode(widget.event.preViewImg),
                       height: 350,
                       width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover),
@@ -65,7 +80,7 @@ class _DetailsState extends State<Details> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pop(context);
+                                  Navigator.pop(context, true);
                                 },
                                 child: Container(
                                   child: Icon(
@@ -88,25 +103,26 @@ class _DetailsState extends State<Details> {
                                 ),
                                 child: Stack(
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        // Background color
-                                        borderRadius: BorderRadius.circular(
-                                            8.0), // Border radius
-                                      ),
-                                    ),
                                     GestureDetector(
                                       onTap: () {
-                                        Share.share("${widget.desc}",
-                                            subject: "${widget.placeName}");
+                                        Share.share(
+                                            "${widget.event.description}",
+                                            subject: "${widget.event.title}");
                                       },
-                                      child: Icon(
-                                        Icons.share,
-                                        color: Colors.white,
-                                        size: 24,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          // color: Colors.grey[300],
+                                          // Background color
+                                          borderRadius: BorderRadius.circular(
+                                              8.0), // Border radius
+                                        ),
+                                        child: Icon(
+                                          Icons.share,
+                                          color: Colors.white,
+                                          size: 24,
+                                        ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -125,18 +141,22 @@ class _DetailsState extends State<Details> {
                                 ),
                                 child: Stack(
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        // Background color
-                                        borderRadius: BorderRadius.circular(
-                                            8.0), // Border radius
+                                    GestureDetector(
+                                      onTap: () {
+                                        manageFavoriteState(widget.event.id);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: Icon(
+                                          Icons.favorite,
+                                          color: isFavorite
+                                              ? Colors.red
+                                              : Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                    Image.asset(
-                                      "assets/heart.png",
-                                      height: 24,
-                                      width: 24,
                                     ),
                                   ],
                                 ),
@@ -154,7 +174,7 @@ class _DetailsState extends State<Details> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.placeName,
+                                widget.event.title,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
@@ -188,12 +208,12 @@ class _DetailsState extends State<Details> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  RatingBar(widget.rating.round()),
+                                  RatingBar(widget.event.rating.round()),
                                   SizedBox(
                                     width: 8,
                                   ),
                                   Text(
-                                    "${widget.rating}",
+                                    "${widget.event.rating}",
                                     style: TextStyle(
                                         color: Colors.white70,
                                         fontWeight: FontWeight.w600,
@@ -245,7 +265,7 @@ class _DetailsState extends State<Details> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
-                  widget.desc ?? '',
+                  widget.event.description ?? '',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: 15,
@@ -263,7 +283,8 @@ class _DetailsState extends State<Details> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     DetailsCard(
-                        rating: widget.rating, noOfReviews: widget.noOfTours)
+                        rating: widget.event.rating,
+                        noOfReviews: widget.event.noOfTours)
                   ],
                 ),
               ),

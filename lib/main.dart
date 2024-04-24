@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:discounttour/views/auth/auth.dart';
 import 'package:discounttour/views/auth/register.dart';
 import 'package:discounttour/views/auth/welcome.dart';
+import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/home.dart';
 import 'package:discounttour/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         AuthScreen.routeName: (context) => AuthScreen(),
         RegisterScreen.routeName: (context) => RegisterScreen(),
         ProfileScreen.routeName: (context) => ProfileScreen(),
+        FavoritesScreen.routeName: (context) => FavoritesScreen(),
       },
     );
   }

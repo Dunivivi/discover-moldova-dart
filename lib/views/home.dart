@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:discounttour/api/event.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/views/details.dart';
+import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/profile.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,6 @@ class _HomeState extends State<Home> {
   var currentPage = 0;
   var totalCount;
   String selectedCategory;
-  var account;
 
   bool isLoading = false;
   bool isFetchingSuggestions = false;
@@ -60,6 +60,17 @@ class _HomeState extends State<Home> {
   void handleCategoryTap(String category) {
     print("Handle category $category");
     _loadDataByCategory(category);
+  }
+
+  void handleDetailPage(bool state) {
+    if (state) {
+      resetData();
+    }
+  }
+
+  resetData() {
+    _loadRecommended();
+    _loadDataByCategory(selectedCategory);
   }
 
   _loadDataByCategory(category) async {
@@ -96,6 +107,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _loadRecommended() async {
+    recommendedEventList = [];
     setState(() {
       isFetchingSuggestions = true; // Set loading state to true
     });
@@ -106,9 +118,6 @@ class _HomeState extends State<Home> {
       isFetchingSuggestions = false; // Set loading state to false
     });
   }
-
-  // Track current route
-  String currentRoute = "home";
 
   @override
   Widget build(BuildContext context) {
@@ -155,29 +164,24 @@ class _HomeState extends State<Home> {
               // ),
               Container(
                 height: 240,
-                child: ListView.builder(
-                  itemCount: recommendedEventList.length,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    if (isFetchingSuggestions) {
-                      return Center(
+                child: isFetchingSuggestions
+                    ? Center(
                         child:
                             CircularProgressIndicator(), // Show loading indicator
-                      );
-                    } else {
-                      return RecommendedList(
-                        label: "New",
-                        name: recommendedEventList[index].title,
-                        noOfTours: recommendedEventList[index].noOfTours,
-                        rating: recommendedEventList[index].rating,
-                        imgUrl: recommendedEventList[index].preViewImg,
-                        desc: recommendedEventList[index].description,
-                      );
-                    }
-                  },
-                ),
+                      )
+                    : ListView.builder(
+                        itemCount: recommendedEventList.length,
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return RecommendedList(
+                            parentKey: parentKey,
+                            handleDetailPage: handleDetailPage,
+                            event: recommendedEventList[index],
+                          );
+                        },
+                      ),
               ),
               SizedBox(
                 height: 8,
@@ -203,12 +207,9 @@ class _HomeState extends State<Home> {
                   itemCount: eventList.length,
                   itemBuilder: (context, index) {
                     return EventScrollList(
-                      desc: eventList[index].description,
-                      imgUrl: eventList[index].preViewImg,
-                      title: eventList[index].title,
-                      price: eventList[index].price.toString(),
-                      rating: eventList[index].rating,
-                      noOfTours: eventList[index].noOfTours,
+                      parentKey: parentKey,
+                      handleDetailPage: handleDetailPage,
+                      event: eventList[index],
                     );
                   }),
               if (isLoading)
@@ -230,45 +231,24 @@ class _HomeState extends State<Home> {
             buildNavItem(
               icon: Icons.explore,
               text: 'Explorează',
-              isActive: currentRoute == "home",
-              onPressed: () {
-                // Explore button action
-                setState(() {
-                  currentRoute = "home";
-                });
-              },
+              isActive: true,
             ),
             buildNavItem(
               icon: Icons.favorite,
               text: 'Favorite',
-              isActive: currentRoute == "favorites",
+              isActive: false,
               onPressed: () {
-                // Favorites button action
-                setState(() {
-                  currentRoute = "favorites";
-                });
+                Navigator.of(context)
+                    .pushReplacementNamed(FavoritesScreen.routeName);
               },
             ),
             buildNavItem(
-              icon: Icons.event,
-              text: 'Evenimente',
-              isActive: currentRoute == "events",
-              onPressed: () {
-                // Events button action
-                setState(() {
-                  currentRoute = "events";
-                });
-              },
-            ),
+                icon: Icons.event, text: 'Evenimente', isActive: false),
             buildNavItem(
               icon: Icons.account_circle,
               text: 'Profil',
-              isActive: currentRoute == "profile",
+              isActive: false,
               onPressed: () {
-                // Profile button action
-                setState(() {
-                  currentRoute = "profile";
-                });
                 Navigator.of(context).pushNamed(ProfileScreen.routeName);
               },
             ),
@@ -390,35 +370,35 @@ class CategoryButton extends StatelessWidget {
 }
 
 class EventScrollList extends StatelessWidget {
-  final String imgUrl;
-  final String title;
-  final String desc;
-  final String price;
-  final double rating;
-  final int noOfTours;
+  final EventModel event;
+
+  // Receive GlobalKey from parent widget
+  final GlobalKey<_HomeState> parentKey;
+
+  // Receive handleTap function from parent widget
+  final Function(bool) handleDetailPage;
 
   EventScrollList(
-      {@required this.imgUrl,
-      @required this.rating,
-      @required this.noOfTours,
-      @required this.desc,
-      @required this.price,
-      @required this.title});
+      {@required this.event, @required this.parentKey, this.handleDetailPage});
+
+  _navigateToDetailPage(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Details(
+                  event: event,
+                )));
+
+    if (result) {
+      handleDetailPage(true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Details(
-                      imgUrl: imgUrl,
-                      placeName: title,
-                      rating: rating,
-                      desc: desc,
-                      noOfTours: noOfTours,
-                    )));
+        _navigateToDetailPage(context);
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
@@ -431,7 +411,7 @@ class EventScrollList extends StatelessWidget {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20)),
-              child: Image.memory(base64Decode(imgUrl),
+              child: Image.memory(base64Decode(event.preViewImg),
                   width: 110, height: 90, fit: BoxFit.cover),
               // child: CachedNetworkImage(
               //   imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUZ7hBdZG6uZv5nN7MpXPoGQtPEDODiMx6eA9RitZ3Ew&s",
@@ -450,7 +430,7 @@ class EventScrollList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      event.title,
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -460,7 +440,7 @@ class EventScrollList extends StatelessWidget {
                       height: 3,
                     ),
                     Text(
-                      desc,
+                      event.description,
                       overflow: TextOverflow.fade,
                       style: TextStyle(
                           fontSize: 13,
@@ -490,7 +470,7 @@ class EventScrollList extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      "$rating",
+                      "${event.rating}",
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -514,35 +494,36 @@ class EventScrollList extends StatelessWidget {
 }
 
 class RecommendedList extends StatelessWidget {
-  final String label;
-  final String name;
-  final int noOfTours;
-  final double rating;
-  final String imgUrl;
-  final String desc;
+  final EventModel event;
+
+  // Receive GlobalKey from parent widget
+  final GlobalKey<_HomeState> parentKey;
+
+  // Receive handleTap function from parent widget
+  final Function(bool) handleDetailPage;
 
   RecommendedList(
-      {@required this.name,
-      @required this.label,
-      @required this.noOfTours,
-      @required this.rating,
-      @required this.desc,
-      @required this.imgUrl});
+      {@required this.event,
+      @required this.parentKey,
+      @required this.handleDetailPage});
+
+  _navigateToDetailPage(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Details(
+                  event: event,
+                )));
+    if (result) {
+      handleDetailPage(true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Details(
-                        imgUrl: imgUrl,
-                        placeName: name,
-                        rating: rating,
-                        desc: desc,
-                        noOfTours: noOfTours,
-                      )));
+          _navigateToDetailPage(context);
         },
         child: Container(
           margin: EdgeInsets.only(right: 8),
@@ -551,7 +532,7 @@ class RecommendedList extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.memory(
-                  base64Decode(imgUrl),
+                  base64Decode(event.preViewImg),
                   height: 220,
                   width: 150,
                   fit: BoxFit.cover,
@@ -572,7 +553,7 @@ class RecommendedList extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 color: Colors.white38),
                             child: Text(
-                              label ?? "New",
+                              "New",
                               style: TextStyle(color: Colors.white),
                             ))
                       ],
@@ -589,7 +570,7 @@ class RecommendedList extends StatelessWidget {
                               children: [
                                 Container(
                                   child: Text(
-                                    name,
+                                    event.title,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -599,7 +580,8 @@ class RecommendedList extends StatelessWidget {
                                 ),
                                 SizedBox(height: 3),
                                 Text(
-                                  noOfTours.toString() + " vizite recente",
+                                  event.noOfTours.toString() +
+                                      " vizite recente",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
@@ -621,7 +603,7 @@ class RecommendedList extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                rating.toString(),
+                                event.rating.toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,

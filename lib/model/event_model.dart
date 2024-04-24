@@ -14,6 +14,7 @@ class EventModel {
   final String lastModifiedBy;
   final DateTime lastModifiedDate;
   final int companyId;
+  final bool favorite;
 
   EventModel({
     this.id,
@@ -31,6 +32,7 @@ class EventModel {
     this.lastModifiedBy,
     this.lastModifiedDate,
     this.companyId,
+    this.favorite
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
@@ -55,7 +57,8 @@ class EventModel {
       lastModifiedDate: json['lastModifiedDate'] != null
           ? DateTime.parse(json['lastModifiedDate'])
           : null,
-      companyId: json['company_id'],
+      companyId: json['companyId'],
+      favorite: json['favorite'],
     );
   }
 
@@ -75,5 +78,6 @@ class EventModel {
         'last_modified_by': lastModifiedBy,
         'last_modified_date': lastModifiedDate?.toIso8601String(),
         'company_id': companyId,
+        'favorite': favorite,
       };
 }
