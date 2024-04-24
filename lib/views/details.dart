@@ -37,6 +37,7 @@ class _DetailsState extends State<Details> {
     } else {
       addToFavorites(id);
     }
+
     setState(() {
       isFavorite = !isFavorite;
     });
