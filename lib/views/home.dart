@@ -464,7 +464,8 @@ class EventScrollList extends StatelessWidget {
                     ),
                     Text(
                       event.description,
-                      overflow: TextOverflow.fade,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,

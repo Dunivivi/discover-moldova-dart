@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:discounttour/views/events/events-detail.dart';
 import 'package:discounttour/views/home.dart';
 import 'package:discounttour/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -319,9 +320,11 @@ class EventScrollList extends StatelessWidget {
     final result = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Details(
-                  event: event,
-                )));
+            builder: (context) => event.eventDate != null
+                ? EventDetails(event: event)
+                : Details(
+                    event: event,
+                  )));
 
     if (result) {
       handleDetailPage(true);
@@ -369,7 +372,8 @@ class EventScrollList extends StatelessWidget {
                     ),
                     Text(
                       event.description,
-                      overflow: TextOverflow.fade,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
                       style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
