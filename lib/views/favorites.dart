@@ -8,7 +8,7 @@ import '../api/event.dart';
 import '../data/data.dart';
 import '../model/event_model.dart';
 import 'details.dart';
-import 'events.dart';
+import 'events/events.dart';
 
 class FavoritesScreen extends StatefulWidget {
   static const routeName = '/favorites';

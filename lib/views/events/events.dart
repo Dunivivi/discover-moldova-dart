@@ -1,13 +1,13 @@
 import 'dart:convert';
 
+import 'package:discounttour/views/events/events-detail.dart';
 import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/profile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../api/event.dart';
-import '../model/event_model.dart';
-import 'home.dart';
+import '../../api/event.dart';
+import '../../model/event_model.dart';
+import '../home.dart';
 
 class EventsScreen extends StatefulWidget {
   static const routeName = '/activities';
@@ -49,6 +49,12 @@ class _EventsState extends State<EventsScreen> {
         totalCount != eventsList.length) {
       currentPage += 1;
       _paginateData();
+    }
+  }
+
+  void handleDetailPage(bool state) {
+    if (state) {
+      resetData();
     }
   }
 
@@ -112,7 +118,10 @@ class _EventsState extends State<EventsScreen> {
                         physics: ClampingScrollPhysics(),
                         itemCount: eventsList.length,
                         itemBuilder: (context, index) {
-                          return EventCard(event: eventsList[index]);
+                          return EventCard(
+                              parentKey: parentKey,
+                              handleDetailPage: handleDetailPage,
+                              event: eventsList[index]);
                         },
                       ),
                 if (isLoading)
@@ -197,59 +206,86 @@ class _EventsState extends State<EventsScreen> {
 class EventCard extends StatelessWidget {
   final EventModel event;
 
-  EventCard({@required this.event});
+  // Receive GlobalKey from parent widget
+  final GlobalKey<_EventsState> parentKey;
+
+  // Receive handleTap function from parent widget
+  final Function(bool) handleDetailPage;
+
+  EventCard(
+      {@required this.event,
+      @required this.parentKey,
+      @required this.handleDetailPage});
+
+  _navigateToDetailPage(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EventDetails(
+                  event: event,
+                )));
+
+    if (result) {
+      handleDetailPage(true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-              flex: 4,
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: MemoryImage(base64Decode(event.preViewImg)),
-                    fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        _navigateToDetailPage(context);
+      },
+      child: Card(
+        margin: EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                flex: 4,
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: MemoryImage(base64Decode(event.preViewImg)),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-              )),
-          Expanded(
-            flex: 6,
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20.0),
-                  Center(
-                    child: Text(
-                      event.title,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                )),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.0),
+                    Center(
+                      child: Text(
+                        event.title,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 45.0),
-                  Divider(),
-                  SizedBox(height: 15.0),
-                  Center(
-                      child: Text(
-                    '${event.eventDate.toIso8601String().split('T').first} ${event.eventDate.hour}:${event.eventDate.minute}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  )),
-                ],
+                    SizedBox(height: 45.0),
+                    Divider(),
+                    SizedBox(height: 15.0),
+                    Center(
+                        child: Text(
+                      '${event.eventDate.toIso8601String().split('T').first} ${event.eventDate.hour}:${event.eventDate.minute}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    )),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
