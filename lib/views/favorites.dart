@@ -346,7 +346,7 @@ class EventScrollList extends StatelessWidget {
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20)),
               child: Image.memory(base64Decode(event.preViewImg),
-                  width: 110, height: 90, fit: BoxFit.cover),
+                  width: 130, height: 130, fit: BoxFit.cover),
             ),
             Expanded(
               // To make the first container take 80% of the width
