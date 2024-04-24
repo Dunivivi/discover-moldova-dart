@@ -103,6 +103,31 @@ class EventService {
     }
   }
 
+  Future<Map<String, dynamic>> fetchActivitiesEvents(pageNumber) async {
+    var dio = Dio();
+    var fullUrl = 'http://localhost:8080/api/events/activities?page=$pageNumber&size=10';
+
+    dio.interceptors
+      ..add(LogInterceptor())
+      ..add(AuthInterceptor());
+
+    try {
+      Response response = await dio.get(fullUrl);
+
+      if (response.statusCode == 200) {
+        List<dynamic> responseData =
+            response.data; // Assuming response.data is a List<dynamic>
+        List<EventModel> events =
+        responseData.map((data) => EventModel.fromJson(data)).toList();
+        String totalCount = response.headers.value('x-total-count');
+
+        return {'events': events, 'totalCount': totalCount};
+      }
+    } catch (error) {
+      print('eeerrrr' + error);
+    }
+  }
+
   Future<bool> addToFavorite(id) async {
     var dio = Dio();
     var fullUrl = 'http://localhost:8080/api/events/favorites/$id';

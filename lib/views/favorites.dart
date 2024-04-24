@@ -8,6 +8,7 @@ import '../api/event.dart';
 import '../data/data.dart';
 import '../model/event_model.dart';
 import 'details.dart';
+import 'events.dart';
 
 class FavoritesScreen extends StatefulWidget {
   static const routeName = '/favorites';
@@ -158,7 +159,8 @@ class _FavoritesState extends State<FavoritesScreen> {
               text: 'Evenimente',
               isActive: false,
               onPressed: () {
-                // Events button action
+                Navigator.of(context)
+                    .pushReplacementNamed(EventsScreen.routeName);
               },
             ),
             buildNavItem(

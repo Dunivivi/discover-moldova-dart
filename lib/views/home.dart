@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:discounttour/api/event.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/views/details.dart';
+import 'package:discounttour/views/events.dart';
 import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -243,7 +244,12 @@ class _HomeState extends State<Home> {
               },
             ),
             buildNavItem(
-                icon: Icons.event, text: 'Evenimente', isActive: false),
+                icon: Icons.event, text: 'Evenimente', isActive: false,
+              onPressed: () {
+                Navigator.of(context)
+                    .pushReplacementNamed(EventsScreen.routeName);
+              },
+            ),
             buildNavItem(
               icon: Icons.account_circle,
               text: 'Profil',
