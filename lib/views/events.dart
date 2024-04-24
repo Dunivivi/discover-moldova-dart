@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/profile.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +33,7 @@ class _EventsState extends State<EventsScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
-    // _paginateData();
+    _paginateData();
   }
 
   @override
@@ -42,8 +44,8 @@ class _EventsState extends State<EventsScreen> {
 
   void _scrollListener() {
     if ((_scrollController.position.maxScrollExtent -
-        _scrollController.position.pixels) <
-        50 &&
+                _scrollController.position.pixels) <
+            50 &&
         totalCount != eventsList.length) {
       currentPage += 1;
       _paginateData();
@@ -61,11 +63,10 @@ class _EventsState extends State<EventsScreen> {
     setState(() {
       isLoading = true; // Set loading state to true
     });
-    await EventService().fetchActivitiesEvents(currentPage).then((data) =>
-    {
-      eventsList.addAll(data['events']),
-      totalCount = int.parse(data['totalCount'])
-    });
+    await EventService().fetchActivitiesEvents(currentPage).then((data) => {
+          eventsList.addAll(data['events']),
+          totalCount = int.parse(data['totalCount'])
+        });
     setState(() {
       isLoading = false; // Set loading state to false
     });
@@ -82,11 +83,17 @@ class _EventsState extends State<EventsScreen> {
             Text(
               "Evenimente",
               style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
             )
           ],
         ),
         elevation: 0.0,
+      ),
+      body: ListView.builder(
+        itemCount: eventsList.length,
+        itemBuilder: (context, index) {
+          return EventCard(event: eventsList[index]);
+        },
       ),
       bottomNavigationBar: Container(
         color: Color(0xfffefefe),
@@ -105,16 +112,18 @@ class _EventsState extends State<EventsScreen> {
               },
             ),
             buildNavItem(
-              icon: Icons.favorite, text: 'Favorite', isActive: false,
+              icon: Icons.favorite,
+              text: 'Favorite',
+              isActive: false,
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed(
-                    FavoritesScreen.routeName);
+                Navigator.of(context)
+                    .pushReplacementNamed(FavoritesScreen.routeName);
               },
             ),
             buildNavItem(
               icon: Icons.event,
               text: 'Evenimente',
-              isActive: false,
+              isActive: true,
             ),
             buildNavItem(
               icon: Icons.account_circle,
@@ -154,6 +163,67 @@ class _EventsState extends State<EventsScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class EventCard extends StatelessWidget {
+  final EventModel event;
+
+  EventCard({@required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+              flex: 4,
+              child: Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: MemoryImage(base64Decode(event.preViewImg)),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )),
+          Expanded(
+            flex: 6,
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20.0),
+                  Center(
+                    child: Text(
+                      event.title,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 45.0),
+                  Divider(),
+                  SizedBox(height: 15.0),
+                  Center(
+                      child: Text(
+                    '${event.eventDate.toIso8601String().split('T').first} ${event.eventDate.hour}:${event.eventDate.minute}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  )),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
