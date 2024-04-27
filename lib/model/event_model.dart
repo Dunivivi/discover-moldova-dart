@@ -1,3 +1,5 @@
+import 'package:discounttour/model/asset_model.dart';
+
 class EventModel {
   final int id;
   final String title;
@@ -15,6 +17,7 @@ class EventModel {
   final DateTime lastModifiedDate;
   final int companyId;
   final bool favorite;
+  final List<AssetModel> assets;
 
   EventModel({
     this.id,
@@ -32,10 +35,19 @@ class EventModel {
     this.lastModifiedBy,
     this.lastModifiedDate,
     this.companyId,
-    this.favorite
+    this.favorite,
+    this.assets,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
+    List<Map<String, dynamic>> assetsJson = json['assets'] != null
+        ? List<Map<String, dynamic>>.from(json['assets'])
+        : null;
+
+// Mapping 'assetsJson' to List of assets (optional)
+    final List<AssetModel> assets =
+        assetsJson?.map((assetJson) => AssetModel.fromJson(assetJson)).toList();
+
     return EventModel(
       id: json['id'],
       title: json['title'],
@@ -46,9 +58,8 @@ class EventModel {
       type: json['type'],
       subtype: json['subtype'],
       price: json['price'],
-      eventDate: json['eventDate'] != null
-          ? DateTime.parse(json['eventDate'])
-          : null,
+      eventDate:
+          json['eventDate'] != null ? DateTime.parse(json['eventDate']) : null,
       createdBy: json['createdBy'],
       createdDate: json['createdDate'] != null
           ? DateTime.parse(json['createdDate'])
@@ -59,6 +70,7 @@ class EventModel {
           : null,
       companyId: json['companyId'],
       favorite: json['favorite'],
+      assets: assets,
     );
   }
 
@@ -79,5 +91,6 @@ class EventModel {
         'last_modified_date': lastModifiedDate?.toIso8601String(),
         'company_id': companyId,
         'favorite': favorite,
+        // 'assets': assets,
       };
 }

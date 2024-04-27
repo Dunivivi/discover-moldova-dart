@@ -115,6 +115,7 @@ class EventService {
       Response response = await dio.get(fullUrl);
 
       if (response.statusCode == 200) {
+        print("respoonse 20000");
         List<dynamic> responseData =
             response.data; // Assuming response.data is a List<dynamic>
         List<EventModel> events =

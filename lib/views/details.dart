@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import '../api/event.dart';
 import '../data/data.dart';
 import '../utils/map_utils.dart';
+import '../widget/photo-view-page.dart';
 
 class Details extends StatefulWidget {
   final EventModel event;
@@ -294,17 +295,20 @@ class _DetailsState extends State<Details> {
               ),
               Container(
                 height: 240,
-                child: ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    itemCount: country.length,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return ImageListTile(
-                        imgUrl: country[index].imgUrl,
-                      );
-                    }),
+                child: widget.event.assets.length != null
+                    ? ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 24),
+                        itemCount: widget.event.assets.length,
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return ImageListTile(
+                            imgUrl: widget.event.assets[index].url,
+                          );
+                        },
+                      )
+                    : SizedBox(), // Display an empty SizedBox if assets is empty
               ),
             ],
           ),
@@ -540,15 +544,30 @@ class ImageListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: CachedNetworkImage(
-          imageUrl: imgUrl,
-          height: 220,
-          width: 150,
-          fit: BoxFit.cover,
+    print(imgUrl);
+
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PhotoViewPage(base64String: imgUrl),
+        ),
+      ),
+      child: Container(
+        margin: EdgeInsets.only(right: 8),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          // child:
+          // Image.memory(base64Decode(imgUrl),
+          //     height: 350,
+          //     width: MediaQuery.of(context).size.width,
+          //     fit: BoxFit.cover),
+          child: Image.memory(
+            base64Decode(imgUrl),
+            height: 220,
+            width: 150,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
