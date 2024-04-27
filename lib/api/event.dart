@@ -6,7 +6,8 @@ import '../core/interceptors/auth-interceptor.dart';
 class EventService {
   Future<Map<String, dynamic>> fetchEvents(pageNumber) async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/events?page=$pageNumber&size=10';
+    // var fullUrl = 'http://localhost:8080/api/events?page=$pageNumber&size=10';
+    var fullUrl = 'http://192.168.1.102:8080/api/events?page=$pageNumber&size=10';
 
     dio.interceptors
       ..add(LogInterceptor())
@@ -31,7 +32,8 @@ class EventService {
 
   Future<Map<String, dynamic>> fetchEventsByCategory(pageNumber, category) async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/events?type.equals=$category&page=$pageNumber&size=10';
+    // var fullUrl = 'http://localhost:8080/api/events?type.equals=$category&page=$pageNumber&size=10';
+    var fullUrl = 'http://192.168.1.102:8080/api/events?type.equals=$category&page=$pageNumber&size=10';
 
     dio.interceptors
       ..add(LogInterceptor())
@@ -56,7 +58,8 @@ class EventService {
 
   Future<Map<String, dynamic>> fetchFavoritesEvents(pageNumber, category) async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/events/favorites/$category?page=$pageNumber&size=10';
+    // var fullUrl = 'http://localhost:8080/api/events/favorites/$category?page=$pageNumber&size=10';
+    var fullUrl = 'http://192.168.1.102:8080/api/events/favorites/$category?page=$pageNumber&size=10';
 
     dio.interceptors
       ..add(LogInterceptor())
@@ -81,7 +84,8 @@ class EventService {
 
   Future<Map<String, dynamic>> fetchRecommendedEvents() async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/events/suggested';
+    // var fullUrl = 'http://localhost:8080/api/events/suggested';
+    var fullUrl = 'http://192.168.1.102:8080/api/events/suggested';
 
     dio.interceptors
       ..add(LogInterceptor())
@@ -105,7 +109,8 @@ class EventService {
 
   Future<Map<String, dynamic>> fetchActivitiesEvents(pageNumber) async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/events/activities?page=$pageNumber&size=10';
+    // var fullUrl = 'http://localhost:8080/api/events/activities?page=$pageNumber&size=10';
+    var fullUrl = 'http://192.168.1.102:8080/api/events/activities?page=$pageNumber&size=10';
 
     dio.interceptors
       ..add(LogInterceptor())
@@ -131,7 +136,8 @@ class EventService {
 
   Future<bool> addToFavorite(id) async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/events/favorites/$id';
+    // var fullUrl = 'http://localhost:8080/api/events/favorites/$id';
+    var fullUrl = 'http://192.168.1.102:8080/api/events/favorites/$id';
 
     dio.interceptors
       ..add(LogInterceptor())
@@ -150,7 +156,8 @@ class EventService {
 
   Future<bool> deleteFromFavorite(id) async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/events/favorites/$id';
+    // var fullUrl = 'http://localhost:8080/api/events/favorites/$id';
+    var fullUrl = 'http://192.168.1.102:8080/api/events/favorites/$id';
 
     dio.interceptors
       ..add(LogInterceptor())

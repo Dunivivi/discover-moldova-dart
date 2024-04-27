@@ -12,7 +12,8 @@ class Account {
   }
 
   login(data) async {
-    var fullUrl = 'http://localhost:8080/api/authenticate';
+    // var fullUrl = 'http://localhost:8080/api/authenticate';
+    var fullUrl = 'http://192.168.1.102:8080/api/authenticate';
 
     http.Response response = await http.post(
       Uri.parse(fullUrl),
@@ -32,8 +33,8 @@ class Account {
 
   fetchAccount() async {
     var dio = Dio();
-    var fullUrl = 'http://localhost:8080/api/account';
-    // dio.options.baseUrl = fullUrl;
+    // var fullUrl = 'http://localhost:8080/api/account';
+    var fullUrl = 'http://192.168.1.102:8080/api/account';
 
     dio.interceptors
       ..add(LogInterceptor())

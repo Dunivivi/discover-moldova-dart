@@ -112,9 +112,6 @@ class _FavoritesState extends State<FavoritesScreen> {
               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 16,
-                  ),
                   CategoryList(
                     parentKey: parentKey,
                     handleTap: handleCategoryTap,
@@ -317,17 +314,29 @@ class EventScrollList extends StatelessWidget {
       {@required this.event, @required this.parentKey, this.handleDetailPage});
 
   _navigateToDetailPage(BuildContext context) async {
-    final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => event.eventDate != null
-                ? EventDetails(event: event)
-                : Details(
+
+    if (event.type == 'Evenimente') {
+      final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  EventDetails(
                     event: event,
                   )));
-
-    if (result) {
-      handleDetailPage(true);
+      if (result) {
+        handleDetailPage(true);
+      }
+    } else {
+      final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Details(
+                    event: event,
+                  )));
+      if (result) {
+        handleDetailPage(true);
+      }
     }
   }
 
