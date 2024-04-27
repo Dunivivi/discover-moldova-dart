@@ -33,7 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (body['status'] == 401 || body['status'] == 400) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Username sau parolă greșită')));
+          const SnackBar(content: Text('Email sau parolă greșită')));
     }
 
     if (body['id_token'] != null) {
@@ -109,7 +109,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     fontSize: 20,
                                   ),
                                   decoration: kTextInputDecoration.copyWith(
-                                      hintText: 'Username')),
+                                      hintText: 'Email')),
                             ),
                             CustomTextField(
                               textField: TextField(

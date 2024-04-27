@@ -72,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
       Navigator.of(context)
-          .pushNamedAndRemoveUntil(AuthScreen.routeName, (_) => false);
+          .pushNamedAndRemoveUntil(WelcomeScreen.routeName, (_) => false);
     } else if (body['status'] == 400) {
       if (body['errorKey'] == 'emailexists') {
         ScaffoldMessenger.of(context)
