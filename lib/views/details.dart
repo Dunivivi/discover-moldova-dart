@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discounttour/model/country_model.dart';
 import 'package:discounttour/model/event_model.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +53,9 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.event.lat);
+    print(widget.event.longitudine);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -183,28 +185,6 @@ class _DetailsState extends State<Details> {
                                     fontSize: 23),
                               ),
                               SizedBox(
-                                height: 12,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.white70,
-                                    size: 25,
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    "Republica Moldova, Orhei",
-                                    style: TextStyle(
-                                        color: Colors.white70,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 17),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
                                 height: 8,
                               ),
                               Row(
@@ -264,6 +244,43 @@ class _DetailsState extends State<Details> {
               //     )
               //   ],
               // ),
+              SizedBox(
+                height: 12,
+              ),
+              Row(
+                children: [
+                  Expanded( // Wrap in Expanded widget
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.black,
+                            size: 25,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Expanded( // Wrap Text widget in Expanded
+                            child: Text(
+                              "${widget.event.location}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
@@ -285,8 +302,10 @@ class _DetailsState extends State<Details> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     DetailsCard(
-                        rating: widget.event.rating,
-                        noOfReviews: widget.event.noOfTours)
+                      rating: widget.event.rating,
+                      noOfReviews: widget.event.noOfTours,
+                      url: widget.event.url,
+                    )
                   ],
                 ),
               ),
@@ -327,7 +346,10 @@ class _DetailsState extends State<Details> {
               onPressed: () {
                 // Add your onTap function logic here
                 print('Button tapped');
-                MapUtils.openMap(-3.823216, -38.481700);
+                MapUtils.openMap(
+                  double.parse(widget.event.lat),
+                  double.parse(widget.event.longitudine),
+                );
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue, // Background color
@@ -374,15 +396,16 @@ class _DetailsState extends State<Details> {
 
 class DetailsCard extends StatelessWidget {
   final String title;
+  final String url;
   final int noOfReviews;
   final double rating;
 
-  DetailsCard({this.rating, this.title, this.noOfReviews});
+  DetailsCard({this.rating, this.title, this.noOfReviews, this.url});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: (() => MapUtils.openUrl("https://translate.google.com/")),
+        onTap: (() => MapUtils.openUrl("${url}")),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(

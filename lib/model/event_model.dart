@@ -18,6 +18,11 @@ class EventModel {
   final int companyId;
   final bool favorite;
   final List<AssetModel> assets;
+  final String lat;
+  final String longitudine;
+  final String url;
+  final String location;
+  final String phone;
 
   EventModel({
     this.id,
@@ -37,6 +42,11 @@ class EventModel {
     this.companyId,
     this.favorite,
     this.assets,
+    this.lat,
+    this.longitudine,
+    this.url,
+    this.location,
+    this.phone,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
@@ -70,6 +80,11 @@ class EventModel {
           : null,
       companyId: json['companyId'],
       favorite: json['favorite'],
+      lat: json['lat'],
+      longitudine: json['longitudine'],
+      url: json['url'],
+      location: json['location'],
+      phone: json['phone'],
       assets: assets,
     );
   }
