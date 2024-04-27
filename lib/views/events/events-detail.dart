@@ -241,13 +241,25 @@ class _EventDetailsState extends State<EventDetails> {
               Divider(),
               SizedBox(height: 15.0),
               Center(
-                  child: Text(
-                '${widget.event.eventDate.toIso8601String().split('T').first} ${widget.event.eventDate.hour}:${widget.event.eventDate.minute}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(width: 5),
+                    // Add some space between the icon and text
+                    Text(
+                      '${widget.event.eventDate.toIso8601String().split('T').first} ${widget.event.eventDate.hour}:${widget.event.eventDate.minute}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
-              )),
+              )
             ],
           ),
         ),
