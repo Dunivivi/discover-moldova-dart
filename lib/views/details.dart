@@ -246,7 +246,8 @@ class _DetailsState extends State<Details> {
               ),
               Row(
                 children: [
-                  Expanded( // Wrap in Expanded widget
+                  Expanded(
+                    // Wrap in Expanded widget
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
@@ -259,7 +260,8 @@ class _DetailsState extends State<Details> {
                           SizedBox(
                             width: 8,
                           ),
-                          Expanded( // Wrap Text widget in Expanded
+                          Expanded(
+                            // Wrap Text widget in Expanded
                             child: Text(
                               "${widget.event.location}",
                               style: TextStyle(
@@ -361,6 +363,26 @@ class _DetailsState extends State<Details> {
                 child: Text('Vizitează acum',
                     style: TextStyle(fontSize: 16)), // Button text
               ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Add your phone button logic here
+                MapUtils.callPhone('+37368768951');
+                // call('tel:+');
+                // Add your phone call logic here
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                // Background color
+                onPrimary: Colors.black,
+                // Text color
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                // Adjust padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Border radius
+                ),
+              ),
+              child: Icon(Icons.phone), // Phone icon
             ),
           ],
         ),

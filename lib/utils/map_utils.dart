@@ -27,18 +27,27 @@ class MapUtils {
         throw 'Could not launch $url';
       }
     }
-
-    // if (await canLaunch(googleUrl)) {
-    //   await launch(googleUrl);
-    // } else {
-    //   throw 'Could not open the map.';
-    // }
   }
 
   static Future<void> openUrl(String url) async {
     final Uri finalUrl = Uri.parse(url);
     if (!await launch(finalUrl.toString())) {
       throw Exception('Could not launch ${finalUrl.toString()}');
+    }
+  }
+
+  static Future<void> callPhone(String phone) async {
+    Uri callUrl = Uri.parse('tel:=$phone');
+
+    try {
+      if (await canLaunch(callUrl.toString())) {
+        // await launch(phoneNumber.toString());
+        await launch(phone);
+      } else {
+        throw 'Could not launch $callUrl';
+      }
+    } catch(error) {
+      print(error);
     }
   }
 }
