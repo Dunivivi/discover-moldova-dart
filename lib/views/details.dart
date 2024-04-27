@@ -440,9 +440,12 @@ class DetailsCard extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Color(0xffD5E6F2),
                         borderRadius: BorderRadius.circular(10)),
-                    child: Image.asset(
-                      "assets/card1.png",
-                      height: 30,
+                    child: Icon(
+                        Icons.cloud_circle,
+                      color: Colors.black,
+                      size: 24,
+                      // "assets/card1.png",
+                      // height: 30,
                     ),
                   ),
                   SizedBox(
@@ -452,39 +455,39 @@ class DetailsCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Booking",
+                        "Pagină web",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Color(0xff5A6C64)),
                       ),
-                      SizedBox(
-                        height: 6,
-                      ),
-                      Text(
-                        "$rating/5",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff5A6C64)),
-                      )
+                      // SizedBox(
+                      //   height: 6,
+                      // ),
+                      // Text(
+                      //   "$rating/5",
+                      //   textAlign: TextAlign.center,
+                      //   style: TextStyle(
+                      //       fontSize: 14,
+                      //       fontWeight: FontWeight.w600,
+                      //       color: Color(0xff5A6C64)),
+                      // )
                     ],
                   ),
                 ],
               ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "În baza a $noOfReviews recenzii",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xff879D95)),
-              ),
+              // SizedBox(
+              //   height: 8,
+              // ),
+              // Text(
+              //   "În baza a $noOfReviews recenzii",
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w600,
+              //       color: Color(0xff879D95)),
+              // ),
             ],
           ),
         ));
