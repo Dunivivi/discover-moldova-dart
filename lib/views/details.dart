@@ -53,9 +53,6 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.event.lat);
-    print(widget.event.longitudine);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

@@ -192,7 +192,7 @@ class _EventDetailsState extends State<EventDetails> {
                                     width: 8,
                                   ),
                                   Text(
-                                    "Republica Moldova, Orhei",
+                                    "${widget.event.location}",
                                     style: TextStyle(
                                         color: Colors.white70,
                                         fontWeight: FontWeight.w500,
@@ -275,9 +275,7 @@ class _EventDetailsState extends State<EventDetails> {
           children: [
             ElevatedButton(
               onPressed: () {
-                // Add your onTap function logic here
-                print('Button tapped');
-                MapUtils.openMap(-3.823216, -38.481700);
+                MapUtils.openUrl(widget.event.url);
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue, // Background color
