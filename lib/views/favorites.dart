@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:discounttour/views/events/events-detail.dart';
 import 'package:discounttour/views/home.dart';
-import 'package:discounttour/views/profile.dart';
+import 'package:discounttour/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import '../api/event.dart';

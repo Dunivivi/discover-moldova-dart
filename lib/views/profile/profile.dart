@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:discounttour/api/account.dart';
 import 'package:discounttour/model/User.dart';
 import 'package:discounttour/views/auth/welcome.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:discounttour/views/profile/about.dart';
 import 'package:flutter/material.dart';
 
-import '../widget/profile-menu.dart';
+import '../../widget/profile-menu.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = '/profile-screen';
@@ -117,7 +117,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const Divider(),
               const SizedBox(height: 10),
               ProfileMenuWidget(
-                  title: "Despre", icon: Icons.info, onPress: () {}),
+                title: "Despre",
+                icon: Icons.info,
+                onPress: () {
+                  Navigator.of(context).pushNamed(AboutScreen.routeName);
+                },
+              ),
               ProfileMenuWidget(
                   title: "Ieșire",
                   icon: Icons.logout,

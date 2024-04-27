@@ -5,7 +5,7 @@ import 'package:discounttour/data/data.dart';
 import 'package:discounttour/views/details.dart';
 import 'package:discounttour/views/events/events.dart';
 import 'package:discounttour/views/favorites.dart';
-import 'package:discounttour/views/profile.dart';
+import 'package:discounttour/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import '../model/event_model.dart';

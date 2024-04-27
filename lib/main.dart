@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:discounttour/views/profile/about.dart';
 import 'package:discounttour/views/auth/auth.dart';
 import 'package:discounttour/views/auth/register.dart';
 import 'package:discounttour/views/auth/welcome.dart';
 import 'package:discounttour/views/events/events.dart';
 import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/home.dart';
-import 'package:discounttour/views/profile.dart';
+import 'package:discounttour/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         ProfileScreen.routeName: (context) => ProfileScreen(),
         FavoritesScreen.routeName: (context) => FavoritesScreen(),
         EventsScreen.routeName: (context) => EventsScreen(),
+        AboutScreen.routeName: (context) => AboutScreen(),
       },
     );
   }
