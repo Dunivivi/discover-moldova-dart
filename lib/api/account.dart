@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:discounttour/api/api.dart';
 import 'package:discounttour/core/interceptors/auth-interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,8 +13,35 @@ class Account {
   }
 
   login(data) async {
-    // var fullUrl = 'http://localhost:8080/api/authenticate';
-    var fullUrl = 'http://192.168.1.102:8080/api/authenticate';
+    var fullUrl = '${Api.resourceUrl()}/api/authenticate';
+
+    http.Response response = await http.post(
+      Uri.parse(fullUrl),
+      body: jsonEncode(data),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    return response;
+  }
+
+  registerUser(data) async {
+    var fullUrl = '${Api.resourceUrl()}/api/register/user';
+
+    http.Response response = await http.post(
+      Uri.parse(fullUrl),
+      body: jsonEncode(data),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    return response;
+  }
+
+  registerCompany(data) async {
+    var fullUrl = '${Api.resourceUrl()}/api/register/user-company';
 
     http.Response response = await http.post(
       Uri.parse(fullUrl),
@@ -33,8 +61,7 @@ class Account {
 
   fetchAccount() async {
     var dio = Dio();
-    // var fullUrl = 'http://localhost:8080/api/account';
-    var fullUrl = 'http://192.168.1.102:8080/api/account';
+    var fullUrl = '${Api.resourceUrl()}/api/account';
 
     dio.interceptors
       ..add(LogInterceptor())

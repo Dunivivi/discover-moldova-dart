@@ -129,20 +129,6 @@ class CustomBottomScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Padding(
-        //     padding: const EdgeInsets.symmetric(
-        //       horizontal: 30,
-        //     ),
-        //     child: GestureDetector(
-        //       onTap: () {
-        //         questionPressed();
-        //       },
-        //       child: Text(question),
-        //     ),
-        //   ),
-        // ),
         Align(
           alignment: Alignment.center,
           child: Hero(
@@ -160,55 +146,3 @@ class CustomBottomScreen extends StatelessWidget {
     );
   }
 }
-
-// Alert signUpAlert({
-//   @required Function onPressed,
-//   @required String title,
-//   @required String desc,
-//   @required String btnText,
-//   @required BuildContext context,
-// }) {
-//   return Alert(
-//     context: context,
-//     title: title,
-//     desc: desc,
-//     buttons: [
-//       DialogButton(
-//         onPressed: () {
-//           onPressed();
-//         },
-//         width: 120,
-//         child: Text(
-//           btnText,
-//           style: const TextStyle(color: Colors.white, fontSize: 20),
-//         ),
-//       ),
-//     ],
-//   );
-// }
-
-// Alert showAlert({
-//   required Function onPressed,
-//   required String title,
-//   required String desc,
-//   required BuildContext context,
-// }) {
-//   return Alert(
-//     context: context,
-//     type: AlertType.error,
-//     title: title,
-//     desc: desc,
-//     buttons: [
-//       DialogButton(
-//         onPressed: () {
-//           onPressed();
-//         },
-//         width: 120,
-//         child: const Text(
-//           "OK",
-//           style: TextStyle(color: Colors.white, fontSize: 20),
-//         ),
-//       )
-//     ],
-//   );
-// }

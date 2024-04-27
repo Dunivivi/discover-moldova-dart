@@ -1,4 +1,5 @@
 import 'package:discounttour/views/auth/auth.dart';
+import 'package:discounttour/views/auth/register.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/components.dart';
@@ -62,7 +63,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           buttonText: 'Înregistare',
                           isOutlined: true,
                           onPressed: () {
-                            //   Navigator.pushNamed(context, SignUpScreen.id);
+                            Navigator.of(context)
+                                .pushNamed(RegisterScreen.routeName);
                           },
                         ),
                       ),
