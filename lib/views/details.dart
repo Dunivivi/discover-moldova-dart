@@ -602,11 +602,6 @@ class ImageListTile extends StatelessWidget {
         margin: EdgeInsets.only(right: 8),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          // child:
-          // Image.memory(base64Decode(imgUrl),
-          //     height: 350,
-          //     width: MediaQuery.of(context).size.width,
-          //     fit: BoxFit.cover),
           child: Image.memory(
             base64Decode(imgUrl),
             height: 220,

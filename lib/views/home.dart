@@ -1,14 +1,18 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:discounttour/api/event.dart';
 import 'package:discounttour/data/data.dart';
 import 'package:discounttour/views/details.dart';
+import 'package:discounttour/views/events/events-create.dart';
 import 'package:discounttour/views/events/events-detail.dart';
 import 'package:discounttour/views/events/events.dart';
 import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 
+import '../api/account.dart';
+import '../model/User.dart';
 import '../model/event_model.dart';
 
 class Home extends StatefulWidget {
@@ -21,6 +25,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   // Define GlobalKey
   GlobalKey<_HomeState> parentKey = GlobalKey<_HomeState>();
+
+  User user;
 
   List<EventModel> eventList = new List();
   List<EventModel> recommendedEventList = new List();
@@ -37,6 +43,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    _fetchLoggedUser();
     _scrollController.addListener(_scrollListener);
     _loadRecommended();
     selectedCategory = "Toate";
@@ -51,8 +58,8 @@ class _HomeState extends State<Home> {
 
   void _scrollListener() {
     if ((_scrollController.position.maxScrollExtent -
-        _scrollController.position.pixels) <
-        50 &&
+                _scrollController.position.pixels) <
+            50 &&
         totalCount != eventList.length) {
       currentPage += 1;
       _paginateDataByCategory(selectedCategory);
@@ -67,6 +74,21 @@ class _HomeState extends State<Home> {
   void handleDetailPage(bool state) {
     if (state) {
       resetData();
+    }
+  }
+
+  _fetchLoggedUser() async {
+    Response<dynamic> response = await Account().fetchAccount();
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userData =
+          response.data; // Assuming response.data contains user data
+      setState(() {
+        user = User.fromJson(userData);
+        print(user.authorities);
+      });
+    } else {
+      // Handle error scenario
+      print("Error fetching user data: ${response.statusCode}");
     }
   }
 
@@ -85,11 +107,10 @@ class _HomeState extends State<Home> {
       isLoading = true; // Set loading state to true
     });
     await EventService().fetchEventsByCategory(currentPage, category).then(
-            (data) =>
-        {
-          eventList.addAll(data['events']),
-          totalCount = int.parse(data['totalCount'])
-        });
+        (data) => {
+              eventList.addAll(data['events']),
+              totalCount = int.parse(data['totalCount'])
+            });
     setState(() {
       isLoading = false; // Set loading state to false
     });
@@ -100,11 +121,10 @@ class _HomeState extends State<Home> {
       isLoading = true; // Set loading state to true
     });
     await EventService().fetchEventsByCategory(currentPage, category).then(
-            (data) =>
-        {
-          eventList.addAll(data['events']),
-          totalCount = int.parse(data['totalCount'])
-        });
+        (data) => {
+              eventList.addAll(data['events']),
+              totalCount = int.parse(data['totalCount'])
+            });
     setState(() {
       isLoading = false; // Set loading state to false
     });
@@ -115,10 +135,9 @@ class _HomeState extends State<Home> {
     setState(() {
       isFetchingSuggestions = true; // Set loading state to true
     });
-    await EventService().fetchRecommendedEvents().then((data) =>
-    {
-      recommendedEventList.addAll(data['events']),
-    });
+    await EventService().fetchRecommendedEvents().then((data) => {
+          recommendedEventList.addAll(data['events']),
+        });
     setState(() {
       isFetchingSuggestions = false; // Set loading state to false
     });
@@ -143,7 +162,7 @@ class _HomeState extends State<Home> {
             Text(
               "Descoperă Moldova",
               style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
             )
           ],
         ),
@@ -171,22 +190,22 @@ class _HomeState extends State<Home> {
                 height: 240,
                 child: isFetchingSuggestions
                     ? Center(
-                  child:
-                  CircularProgressIndicator(), // Show loading indicator
-                )
+                        child:
+                            CircularProgressIndicator(), // Show loading indicator
+                      )
                     : ListView.builder(
-                  itemCount: recommendedEventList.length,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return RecommendedList(
-                      parentKey: parentKey,
-                      handleDetailPage: handleDetailPage,
-                      event: recommendedEventList[index],
-                    );
-                  },
-                ),
+                        itemCount: recommendedEventList.length,
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return RecommendedList(
+                            parentKey: parentKey,
+                            handleDetailPage: handleDetailPage,
+                            event: recommendedEventList[index],
+                          );
+                        },
+                      ),
               ),
               SizedBox(
                 height: 8,
@@ -207,35 +226,35 @@ class _HomeState extends State<Home> {
               ),
               eventList.isEmpty && !isLoading
                   ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 100.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search, size: 50),
-                        SizedBox(height: 10),
-                        Text('Nu sunt date'),
-                      ],
-                    ),
-                  ))
+                      child: Padding(
+                      padding: const EdgeInsets.only(top: 100.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search, size: 50),
+                          SizedBox(height: 10),
+                          Text('Nu sunt date'),
+                        ],
+                      ),
+                    ))
                   : ListView.builder(
-                  padding: EdgeInsets.only(top: 10),
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemCount: eventList.length,
-                  itemBuilder: (context, index) {
-                    return EventScrollList(
-                      parentKey: parentKey,
-                      handleDetailPage: handleDetailPage,
-                      event: eventList[index],
-                    );
-                  }),
+                      padding: EdgeInsets.only(top: 10),
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: eventList.length,
+                      itemBuilder: (context, index) {
+                        return EventScrollList(
+                          parentKey: parentKey,
+                          handleDetailPage: handleDetailPage,
+                          event: eventList[index],
+                        );
+                      }),
               if (isLoading)
                 Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 100.0),
-                      child: CircularProgressIndicator(),
-                    )),
+                  padding: const EdgeInsets.only(top: 100.0),
+                  child: CircularProgressIndicator(),
+                )),
             ],
           ),
         ),
@@ -262,6 +281,22 @@ class _HomeState extends State<Home> {
                     .pushReplacementNamed(FavoritesScreen.routeName);
               },
             ),
+            if (user != null && user.authorities.contains('ROLE_COMPANY'))
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: SizedBox(
+                  width: 60.0,
+                  height: 60.0,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(EventCreateScreen.routeName);
+                    },
+                    child: Icon(Icons.add, size: 40.0, color: Colors.black,),
+                    backgroundColor: Colors.amber,
+                  ),
+                ),
+              ),
             buildNavItem(
               icon: Icons.event,
               text: 'Evenimente',
@@ -344,21 +379,20 @@ class _CategoryListState extends State<CategoryList> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: categories
-            .map((category) =>
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              // Adjust horizontal spacing between categories
-              child: CategoryButton(
-                category: category,
-                isSelected: category == selectedCategory,
-                onPressed: () {
-                  setState(() {
-                    selectedCategory = category;
-                  });
-                  widget.handleTap(category);
-                },
-              ),
-            ))
+            .map((category) => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  // Adjust horizontal spacing between categories
+                  child: CategoryButton(
+                    category: category,
+                    isSelected: category == selectedCategory,
+                    onPressed: () {
+                      setState(() {
+                        selectedCategory = category;
+                      });
+                      widget.handleTap(category);
+                    },
+                  ),
+                ))
             .toList(),
       ),
     );
@@ -410,13 +444,11 @@ class EventScrollList extends StatelessWidget {
       {@required this.event, @required this.parentKey, this.handleDetailPage});
 
   _navigateToDetailPage(BuildContext context) async {
-
     if (event.type == 'Evenimente') {
       final result = await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  EventDetails(
+              builder: (context) => EventDetails(
                     event: event,
                   )));
       if (result) {
@@ -426,8 +458,7 @@ class EventScrollList extends StatelessWidget {
       final result = await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  Details(
+              builder: (context) => Details(
                     event: event,
                   )));
       if (result) {
@@ -466,7 +497,7 @@ class EventScrollList extends StatelessWidget {
               // To make the first container take 80% of the width
               flex: 8, // 8
               child: // 0% of available
-              Container(
+                  Container(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -545,18 +576,17 @@ class RecommendedList extends StatelessWidget {
   // Receive handleTap function from parent widget
   final Function(bool) handleDetailPage;
 
-  RecommendedList({@required this.event,
-    @required this.parentKey,
-    @required this.handleDetailPage});
+  RecommendedList(
+      {@required this.event,
+      @required this.parentKey,
+      @required this.handleDetailPage});
 
   _navigateToDetailPage(BuildContext context) async {
-
     if (event.type == 'Evenimente') {
       final result = await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  EventDetails(
+              builder: (context) => EventDetails(
                     event: event,
                   )));
       if (result) {
@@ -566,8 +596,7 @@ class RecommendedList extends StatelessWidget {
       final result = await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  Details(
+              builder: (context) => Details(
                     event: event,
                   )));
       if (result) {
@@ -652,7 +681,7 @@ class RecommendedList extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(bottom: 0, right: 5, top: 30),
                           padding:
-                          EdgeInsets.symmetric(horizontal: 3, vertical: 7),
+                              EdgeInsets.symmetric(horizontal: 3, vertical: 7),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(3),
                             color: Colors.white38,

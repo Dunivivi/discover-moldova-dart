@@ -167,4 +167,20 @@ class EventService {
       print('eeerrrr' + error);
     }
   }
+
+  createEvent(data) async {
+    var dio = Dio();
+    var fullUrl = '${Api.resourceUrl()}/api/events';
+
+    dio.interceptors
+      ..add(LogInterceptor())
+      ..add(AuthInterceptor());
+
+    try {
+      Response response = await dio.post(fullUrl, data: data);
+      return response;
+    } catch (error) {
+      print('eeerrrr' + error);
+    }
+  }
 }

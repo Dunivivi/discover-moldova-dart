@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:discounttour/views/events/events-create.dart';
 import 'package:discounttour/views/profile/about.dart';
 import 'package:discounttour/views/auth/auth.dart';
 import 'package:discounttour/views/auth/register.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         FavoritesScreen.routeName: (context) => FavoritesScreen(),
         EventsScreen.routeName: (context) => EventsScreen(),
         AboutScreen.routeName: (context) => AboutScreen(),
+        EventCreateScreen.routeName: (context) => EventCreateScreen(),
       },
     );
   }
