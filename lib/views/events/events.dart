@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:discounttour/views/events/events-detail.dart';
 import 'package:discounttour/views/favorites.dart';
 import 'package:discounttour/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 
+import '../../api/account.dart';
 import '../../api/event.dart';
+import '../../model/User.dart';
 import '../../model/event_model.dart';
 import '../home.dart';
+import 'events-create.dart';
 
 class EventsScreen extends StatefulWidget {
   static const routeName = '/activities';
@@ -17,6 +21,8 @@ class EventsScreen extends StatefulWidget {
 }
 
 class _EventsState extends State<EventsScreen> {
+  User user;
+
   List<EventModel> eventsList = new List();
 
   // Define GlobalKey
@@ -32,6 +38,7 @@ class _EventsState extends State<EventsScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchLoggedUser();
     _scrollController.addListener(_scrollListener);
     _paginateData();
   }
@@ -40,6 +47,21 @@ class _EventsState extends State<EventsScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  _fetchLoggedUser() async {
+    Response<dynamic> response = await Account().fetchAccount();
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userData =
+          response.data; // Assuming response.data contains user data
+      setState(() {
+        user = User.fromJson(userData);
+        print(user.authorities);
+      });
+    } else {
+      // Handle error scenario
+      print("Error fetching user data: ${response.statusCode}");
+    }
   }
 
   void _scrollListener() {
@@ -156,6 +178,26 @@ class _EventsState extends State<EventsScreen> {
                     .pushReplacementNamed(FavoritesScreen.routeName);
               },
             ),
+            if (user != null && user.authorities.contains('ROLE_COMPANY'))
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: SizedBox(
+                  width: 60.0,
+                  height: 60.0,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(EventCreateScreen.routeName);
+                    },
+                    child: Icon(
+                      Icons.add,
+                      size: 40.0,
+                      color: Colors.black,
+                    ),
+                    backgroundColor: Colors.amber,
+                  ),
+                ),
+              ),
             buildNavItem(
               icon: Icons.event,
               text: 'Evenimente',

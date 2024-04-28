@@ -1,14 +1,18 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:discounttour/views/events/events-detail.dart';
 import 'package:discounttour/views/home.dart';
 import 'package:discounttour/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 
+import '../api/account.dart';
 import '../api/event.dart';
 import '../data/data.dart';
+import '../model/User.dart';
 import '../model/event_model.dart';
 import 'details.dart';
+import 'events/events-create.dart';
 import 'events/events.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -19,6 +23,8 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesState extends State<FavoritesScreen> {
+  User user;
+
   List<EventModel> favoritesList = new List();
 
   // Define GlobalKey
@@ -35,6 +41,7 @@ class _FavoritesState extends State<FavoritesScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchLoggedUser();
     _scrollController.addListener(_scrollListener);
     selectedCategory = "Toate";
     _paginateDataByCategory(selectedCategory);
@@ -44,6 +51,21 @@ class _FavoritesState extends State<FavoritesScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  _fetchLoggedUser() async {
+    Response<dynamic> response = await Account().fetchAccount();
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userData =
+          response.data; // Assuming response.data contains user data
+      setState(() {
+        user = User.fromJson(userData);
+        print(user.authorities);
+      });
+    } else {
+      // Handle error scenario
+      print("Error fetching user data: ${response.statusCode}");
+    }
   }
 
   void _scrollListener() {
@@ -167,6 +189,22 @@ class _FavoritesState extends State<FavoritesScreen> {
             ),
             buildNavItem(
                 icon: Icons.favorite, text: 'Favorite', isActive: true),
+            if (user != null && user.authorities.contains('ROLE_COMPANY'))
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: SizedBox(
+                  width: 60.0,
+                  height: 60.0,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(EventCreateScreen.routeName);
+                    },
+                    child: Icon(Icons.add, size: 40.0, color: Colors.black,),
+                    backgroundColor: Colors.amber,
+                  ),
+                ),
+              ),
             buildNavItem(
               icon: Icons.event,
               text: 'Evenimente',
