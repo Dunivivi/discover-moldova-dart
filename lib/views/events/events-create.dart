@@ -7,6 +7,9 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../api/event.dart';
 import '../../data/data.dart';
+import '../../utils/slp_constants.dart';
+import '../location/location-picker.dart';
+import '../location/location-result.dart';
 
 class EventCreateScreen extends StatefulWidget {
   static const routeName = '/event-create';
@@ -36,6 +39,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   DateTime _selectedDate;
 
   List<String> assets = [];
+
+  SimpleLocationResult _selectedLocation;
 
   _validateAndSubmit() {
     final FormState form = _formKey.currentState;
@@ -340,45 +345,28 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Latitude',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter latitude';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                    lat = value;
-                },
-              ),
+              // TextFormField(
+              //   decoration: InputDecoration(
+              //     hintText: 'Latitude',
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(40),
+              //     ),
+              //   ),
+              //   validator: (value) {
+              //     if (value.isEmpty) {
+              //       return 'Please enter latitude';
+              //     }
+              //     return null;
+              //   },
+              //   onChanged: (value) {
+              //       lat = value;
+              //   },
+              // ),
+              // SizedBox(height: 20),
               SizedBox(height: 20),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'Longitude',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter longitude';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  longitude = value;
-                },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Site web url',
+                  hintText: 'Url site web',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
                   ),
@@ -387,6 +375,58 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   url = value;
                 },
               ),
+              SizedBox(height: 20),
+              TextButton(
+                child: Text("Selectați locația"),
+                onPressed: () {
+                  double latitude = _selectedLocation != null
+                      ? _selectedLocation.latitude
+                      : SLPConstants.DEFAULT_LATITUDE;
+                  double longitude = _selectedLocation != null
+                      ? _selectedLocation.longitude
+                      : SLPConstants.DEFAULT_LONGITUDE;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SimpleLocationPicker(
+                                initialLatitude: latitude,
+                                initialLongitude: longitude,
+                                appBarTitle: "Locație",
+                              ))).then((value) {
+                    if (value != null) {
+                      setState(() {
+                        longitude = value.longitude;
+                        latitude = value.latitude;
+                        _selectedLocation = value;
+                        this.longitude = value.longitude.toString();
+                        this.lat = value.latitude.toString();
+                      });
+                    }
+                  });
+                },
+              ),
+              if (_selectedLocation != null) ...[
+                Text("Longitudine selectată: ${_selectedLocation.longitude}"),
+                Text("Latitudine selectată: ${_selectedLocation.latitude}"),
+              ],
+
+              // TextFormField(
+              //   decoration: InputDecoration(
+              //     hintText: 'Longitude',
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(40),
+              //     ),
+              //   ),
+              //   validator: (value) {
+              //     if (value.isEmpty) {
+              //       return 'Please enter longitude';
+              //     }
+              //     return null;
+              //   },
+              //   onChanged: (value) {
+              //     longitude = value;
+              //   },
+              // ),
               SizedBox(height: 20),
 // Input for Preview Image
               Row(

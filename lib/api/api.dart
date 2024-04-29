@@ -1,5 +1,5 @@
 class Api {
   static resourceUrl() {
-    return 'http://192.168.1.102:8080';
+    return 'http://localhost:8080';
   }
 }
