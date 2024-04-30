@@ -86,6 +86,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: Theme.of(context).textTheme.headline4),
               Text('${user?.email ?? ''}',
                   style: Theme.of(context).textTheme.bodyText2),
+              Text('${user?.company ?? ''}',
+                  style: Theme.of(context).textTheme.bodyText2),
               const SizedBox(height: 20),
 
               /// -- BUTTON

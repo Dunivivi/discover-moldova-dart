@@ -107,7 +107,7 @@ class _DetailsState extends State<Details> {
                                     GestureDetector(
                                       onTap: () {
                                         Share.share(
-                                            "${widget.event.description}",
+                                            "${widget.event.description} ${widget.event.url}",
                                             subject: "${widget.event.title}");
                                       },
                                       child: Container(

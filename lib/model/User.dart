@@ -4,6 +4,7 @@ class User {
   String firstName;
   String lastName;
   String email;
+  String company;
   String createdBy;
   DateTime createdDate;
   String lastModifiedBy;
@@ -21,6 +22,7 @@ class User {
     this.lastModifiedBy,
     this.lastModifiedDate,
     this.authorities,
+    this.company,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class User {
       login: json['login'],
       firstName: json['firstName'],
       lastName: json['lastName'],
+      company: json['company'],
       email: json['email'],
       createdBy: json['createdBy'],
       // You can parse date strings to DateTime objects if needed
