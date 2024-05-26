@@ -1,13 +1,16 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:discounttour/model/country_model.dart';
 import 'package:discounttour/model/event_model.dart';
 import 'package:discounttour/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../api/account.dart';
 import '../api/event.dart';
 import '../data/data.dart';
+import '../model/User.dart';
 import '../utils/map_utils.dart';
 import '../widget/photo-view-page.dart';
 
@@ -21,6 +24,7 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
+  User user;
   List<CountryModel> country = new List();
 
   bool isFavorite = false;
@@ -28,8 +32,24 @@ class _DetailsState extends State<Details> {
   @override
   void initState() {
     country = getCountrys();
+    _fetchLoggedUser();
     isFavorite = widget.event.favorite;
     super.initState();
+  }
+
+  _fetchLoggedUser() async {
+    Response<dynamic> response = await Account().fetchAccount();
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userData =
+          response.data; // Assuming response.data contains user data
+      setState(() {
+        user = User.fromJson(userData);
+        print(user.authorities);
+      });
+    } else {
+      // Handle error scenario
+      print("Error fetching user data: ${response.statusCode}");
+    }
   }
 
   manageFavoriteState(id) {
@@ -330,6 +350,7 @@ class _DetailsState extends State<Details> {
                       style: TextStyle(fontSize: 16)), // Button text
                 ),
               ),
+              if (user != null && user.authorities.contains('ROLE_ADMIN'))
               Container(
                 decoration: BoxDecoration(
                   color: Colors.red, // Button background color
