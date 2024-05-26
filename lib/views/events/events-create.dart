@@ -224,32 +224,32 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 },
               ),
               SizedBox(height: 20),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Rating (0 - 5.0)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Introduceți valoarea';
-                  }
-                  final rating = double.tryParse(value);
-                  if (rating == null) {
-                    return 'Nu este număr';
-                  }
-                  if (rating < 0 || rating > 5.0) {
-                    return 'Trebuie să fie cuprins între 0 și 5.0';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  rating = double.parse(value);
-                },
-              ),
-              SizedBox(height: 20),
+              // TextFormField(
+              //   decoration: InputDecoration(
+              //     hintText: 'Rating (0 - 5.0)',
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(40),
+              //     ),
+              //   ),
+              //   keyboardType: TextInputType.numberWithOptions(decimal: true),
+              //   validator: (value) {
+              //     if (value.isEmpty) {
+              //       return 'Introduceți valoarea';
+              //     }
+              //     final rating = double.tryParse(value);
+              //     if (rating == null) {
+              //       return 'Nu este număr';
+              //     }
+              //     if (rating < 0 || rating > 5.0) {
+              //       return 'Trebuie să fie cuprins între 0 și 5.0';
+              //     }
+              //     return null;
+              //   },
+              //   onChanged: (value) {
+              //     rating = double.parse(value);
+              //   },
+              // ),
+              // SizedBox(height: 20),
               TextFormField(
                 decoration: InputDecoration(
                   hintText: 'Vizite curente',

@@ -433,31 +433,31 @@ class EventScrollList extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-                margin: EdgeInsets.only(bottom: 10, right: 8),
-                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Color(0xff139157)),
-                child: Column(
-                  children: [
-                    Text(
-                      "${event.rating}",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12),
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.white,
-                      size: 20,
-                    )
-                  ],
-                ))
+            // Container(
+            //     margin: EdgeInsets.only(bottom: 10, right: 8),
+            //     padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            //     decoration: BoxDecoration(
+            //         borderRadius: BorderRadius.circular(6),
+            //         color: Color(0xff139157)),
+            //     child: Column(
+            //       children: [
+            //         Text(
+            //           "${event.rating}",
+            //           style: TextStyle(
+            //               color: Colors.white,
+            //               fontWeight: FontWeight.w600,
+            //               fontSize: 12),
+            //         ),
+            //         SizedBox(
+            //           height: 2,
+            //         ),
+            //         Icon(
+            //           Icons.star,
+            //           color: Colors.white,
+            //           size: 20,
+            //         )
+            //       ],
+            //     ))
           ],
         ),
       ),

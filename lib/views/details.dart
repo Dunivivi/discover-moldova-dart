@@ -184,22 +184,22 @@ class _DetailsState extends State<Details> {
                               SizedBox(
                                 height: 8,
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  RatingBar(widget.event.rating.round()),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    "${widget.event.rating}",
-                                    style: TextStyle(
-                                        color: Colors.white70,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 17),
-                                  )
-                                ],
-                              ),
+                              // Row(
+                              //   crossAxisAlignment: CrossAxisAlignment.center,
+                              //   children: [
+                              //     RatingBar(widget.event.rating.round()),
+                              //     SizedBox(
+                              //       width: 8,
+                              //     ),
+                              //     Text(
+                              //       "${widget.event.rating}",
+                              //       style: TextStyle(
+                              //           color: Colors.white70,
+                              //           fontWeight: FontWeight.w600,
+                              //           fontSize: 17),
+                              //     )
+                              //   ],
+                              // ),
                             ],
                           ),
                         ),

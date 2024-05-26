@@ -33,7 +33,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     children: [
                       // const ScreenTitle(title: 'Hello'),
                       const Text(
-                        'Să descoperim împreună Republica Moldova !',
+                        'Să descoperim împreună Republica Moldova!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.grey,
