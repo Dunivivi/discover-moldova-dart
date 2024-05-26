@@ -183,4 +183,23 @@ class EventService {
       print('eeerrrr' + error);
     }
   }
+
+  Future<bool> deleteEvent(id) async {
+    var dio = Dio();
+    var fullUrl = '${Api.resourceUrl()}/api/events/$id';
+
+    dio.interceptors
+      ..add(LogInterceptor())
+      ..add(AuthInterceptor());
+
+    try {
+      Response response = await dio.delete(fullUrl);
+
+      if (response.statusCode == 204) {
+        return true;
+      }
+    } catch (error) {
+      print('eeerrrr while deleting' + error);
+    }
+  }
 }

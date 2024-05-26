@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../api/event.dart';
 import '../../utils/map_utils.dart';
+import '../home.dart';
 
 class EventDetails extends StatefulWidget {
   final EventModel event;
@@ -46,6 +47,11 @@ class _EventDetailsState extends State<EventDetails> {
 
   removeFromFavorites(id) async {
     await EventService().deleteFromFavorite(id).then((value) => null);
+  }
+
+  deleteEvent(id) async {
+    print('88888');
+    await EventService().deleteEvent(id).then((value) => null);
   }
 
   @override
@@ -264,36 +270,91 @@ class _EventDetailsState extends State<EventDetails> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        color: Color(0xfffefefe),
-        // Background color
-        padding:
-            EdgeInsets.only(left: 16.0, right: 16.0, bottom: 30.0, top: 10),
-        // Padding for the container, excluding top
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                MapUtils.openUrl(widget.event.url);
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // Background color
-                onPrimary: Colors.white, // Text color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Border radius
+        bottomNavigationBar: Container(
+          color: Color(0xfffefefe),
+          // Background color
+          padding:
+          EdgeInsets.only(left: 16.0, right: 16.0, bottom: 30.0, top: 10),
+          // Padding for the container, excluding top
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  MapUtils.openUrl(widget.event.url);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue, // Background color
+                  onPrimary: Colors.white, // Text color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // Border radius
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 30, right: 30, top: 12, bottom: 12),
+                  child: Text('Verifică disponibilitate',
+                      style: TextStyle(fontSize: 16)), // Button text
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 30, right: 30, top: 12, bottom: 12),
-                child: Text('Verifică disponibilitate',
-                    style: TextStyle(fontSize: 16)), // Button text
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.red, // Button background color
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10), // Border radius
+                ),
+                margin: EdgeInsets.only(left: 10),
+                child: IconButton(
+                  onPressed: () {
+                    print('Trash button tapped');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Confirmare ștergere"),
+                          content: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 15.0),
+                            child: Text(
+                                "Sunteți sigur că doriți să ștergeți înregistrarea ?"),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                await deleteEvent(widget.event.id); // Wait for the deletion to complete
+                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Home.routeName, (_) => false); // Navigate to Home
+                              },
+                              child: Text("Da"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text("Nu"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: Icon(Icons.delete),
+                  color: Colors.white,
+                  // Icon color
+                  padding: EdgeInsets.all(10),
+                  // Padding inside the button
+                  constraints: BoxConstraints(),
+                  // Removes default constraints to allow for custom size
+                  iconSize: 24,
+                  // Icon size
+                  splashColor: Colors.redAccent,
+                  // Splash color on press
+                  splashRadius: 28, // Splash radius
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        )
     );
   }
 }
